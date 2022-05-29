@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SymulatorWindy"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Symulator windy" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
     </Grid>
 </Window>
