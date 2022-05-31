@@ -10,24 +10,28 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace LiftSimulator
 {
-    public partial class MainWindow : Window
+    /// <summary>
+    /// Interaction logic for SettingsWindow.xaml
+    /// </summary>
+    public partial class SettingsWindow : Window
     {
-        public MainWindow()
+        public SettingsWindow()
         {
+            Owner = App.Current.MainWindow;
             InitializeComponent();
         }
-
-        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        public void ChangeSettings()
         {
-            SettingsWindow tempSettingsWindow = new SettingsWindow();
-            rectDarkWindow.Visibility = Visibility.Visible;
-            tempSettingsWindow.ChangeSettings();
-            rectDarkWindow.Visibility = Visibility.Hidden;
+            this.ShowDialog();
+        }
+
+        private void btnSettingsOkCancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

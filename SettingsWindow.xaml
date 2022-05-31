@@ -1,0 +1,89 @@
+﻿<Window x:Class="LiftSimulator.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LiftSimulator"
+        mc:Ignorable="d"
+        Title="Settings" ResizeMode="NoResize" Height="250" Width="400" WindowStyle="None" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Label Name="lbSettingsTitle" Content="Settings" Style="{StaticResource TitleLabelStyle}"/>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+            <Label Name="lbSetNumberOfFloors" Content="Number of floors" Style="{StaticResource SettingsOptionLabelStyle}"/>
+            <Label Name="lbSetNumberOfLifts" Content="Number of lifts" Visibility="Collapsed" Style="{StaticResource SettingsOptionLabelStyle}"/>
+            <Label Name="lbSetHumanWeight" Content="Human weight" Style="{StaticResource SettingsOptionLabelStyle}"/>
+            <Label Name="lbSetLiftWeightLimit" Content="Lift weight limit" Style="{StaticResource SettingsOptionLabelStyle}"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
+            <Grid Style="{StaticResource SettingsInnerGridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="15"/>
+                </Grid.RowDefinitions>
+                <TextBox Name="tbSetNumberOfFloors" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Text="4" Style="{StaticResource SettingsOptionTextBoxStyle}"/>
+                <Button Name="btnIncreaseNumberOfFloors" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}"/>
+                <Button Name="btnDecreaseNumberOfFloors" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}"/>
+            </Grid>
+            <Grid Style="{StaticResource SettingsInnerGridStyle}" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="15"/>
+                </Grid.RowDefinitions>
+                <TextBox Name="tbSetNumberOfLifts" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Text="1" Style="{StaticResource SettingsOptionTextBoxStyle}"/>
+                <Button Name="btnIncreaseNumberOfLifts" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}"/>
+                <Button Name="btnDecreaseNumberOfLifts" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}"/>
+            </Grid>
+            <Grid Style="{StaticResource SettingsInnerGridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="15"/>
+                </Grid.RowDefinitions>
+                <TextBox Name="tbSetHumanWeight" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Text="70" Style="{StaticResource SettingsOptionTextBoxStyle}"/>
+                <Button Name="btnIncreaseHumanWeight" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}"/>
+                <Button Name="btnDecreaseHumanWeight" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}"/>
+            </Grid>
+            <Grid Style="{StaticResource SettingsInnerGridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="15"/>
+                </Grid.RowDefinitions>
+                <TextBox Name="tbSetLiftWeightLimit" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Text="700" Style="{StaticResource SettingsOptionTextBoxStyle}"/>
+                <Button Name="btnIncreaseLiftWeightLimit" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}"/>
+                <Button Name="btnDecreaseLiftWeightLimit" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}"/>
+            </Grid>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Name="btnSettingsOkButton" Content="Ok" Style="{StaticResource OkCancelStyle}" Click="btnSettingsOkCancelButton_Click"/>
+            <Button Name="btnSettingsCancelButton" Content="Cancel" Style="{StaticResource OkCancelStyle}" Click="btnSettingsOkCancelButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
