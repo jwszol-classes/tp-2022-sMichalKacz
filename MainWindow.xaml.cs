@@ -17,6 +17,7 @@ namespace LiftSimulator
 {
     public partial class MainWindow : Window
     {
+        cSettings CurrentSettings = new cSettings();
         public MainWindow()
         {
             InitializeComponent();
@@ -26,7 +27,7 @@ namespace LiftSimulator
         {
             SettingsWindow tempSettingsWindow = new SettingsWindow();
             rectDarkWindow.Visibility = Visibility.Visible;
-            tempSettingsWindow.ChangeSettings();
+            tempSettingsWindow.ChangeSettings(ref CurrentSettings);
             rectDarkWindow.Visibility = Visibility.Hidden;
         }
     }

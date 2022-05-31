@@ -17,6 +17,6 @@
             <ColumnDefinition Width="30"/>
         </Grid.ColumnDefinitions>
         <Button x:Name="btnSettings" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsButtonStyle}" Click="btnSettings_Click"></Button>
-        <Rectangle Name="rectDarkWindow" Grid.RowSpan="3" Grid.ColumnSpan="2" Visibility="Collapsed" Fill="DarkGray" Opacity="20"/>
+        <Rectangle Name="rectDarkWindow" Grid.RowSpan="3" Grid.ColumnSpan="2" Visibility="Collapsed" Fill="DarkGray" Opacity="0.4"/>
     </Grid>
 </Window>

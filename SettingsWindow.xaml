@@ -35,8 +35,8 @@
                     <RowDefinition Height="15"/>
                 </Grid.RowDefinitions>
                 <TextBox Name="tbSetNumberOfFloors" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Text="4" Style="{StaticResource SettingsOptionTextBoxStyle}"/>
-                <Button Name="btnIncreaseNumberOfFloors" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}"/>
-                <Button Name="btnDecreaseNumberOfFloors" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}"/>
+                <Button Name="btnIncreaseNumberOfFloors" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}" Click="btnChangeNumberOfFloors_Click"/>
+                <Button Name="btnDecreaseNumberOfFloors" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}" Click="btnChangeNumberOfFloors_Click"/>
             </Grid>
             <Grid Style="{StaticResource SettingsInnerGridStyle}" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
@@ -82,8 +82,8 @@
             </Grid>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Name="btnSettingsOkButton" Content="Ok" Style="{StaticResource OkCancelStyle}" Click="btnSettingsOkCancelButton_Click"/>
-            <Button Name="btnSettingsCancelButton" Content="Cancel" Style="{StaticResource OkCancelStyle}" Click="btnSettingsOkCancelButton_Click"/>
+            <Button Name="btnSettingsOkButton" Content="Ok" Style="{StaticResource OkCancelStyle}" Tag="true" Click="btnSettingsOkCancelButton_Click"/>
+            <Button Name="btnSettingsCancelButton" Content="Cancel" Style="{StaticResource OkCancelStyle}" Tag="false" Click="btnSettingsOkCancelButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
