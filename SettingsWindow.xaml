@@ -49,8 +49,8 @@
                     <RowDefinition Height="15"/>
                 </Grid.RowDefinitions>
                 <TextBox Name="tbSetNumberOfLifts" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Text="1" Style="{StaticResource SettingsOptionTextBoxStyle}"/>
-                <Button Name="btnIncreaseNumberOfLifts" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}"/>
-                <Button Name="btnDecreaseNumberOfLifts" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}"/>
+                <Button Name="btnIncreaseNumberOfLifts" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}" Click="btnChangeNumberOfLifts_Click"/>
+                <Button Name="btnDecreaseNumberOfLifts" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}" Click="btnChangeNumberOfLifts_Click"/>
             </Grid>
             <Grid Style="{StaticResource SettingsInnerGridStyle}">
                 <Grid.ColumnDefinitions>
@@ -63,8 +63,8 @@
                     <RowDefinition Height="15"/>
                 </Grid.RowDefinitions>
                 <TextBox Name="tbSetHumanWeight" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Text="70" Style="{StaticResource SettingsOptionTextBoxStyle}"/>
-                <Button Name="btnIncreaseHumanWeight" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}"/>
-                <Button Name="btnDecreaseHumanWeight" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}"/>
+                <Button Name="btnIncreaseHumanWeight" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}" Click="btnChangeHumanWeight_Click"/>
+                <Button Name="btnDecreaseHumanWeight" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}" Click="btnChangeHumanWeight_Click"/>
             </Grid>
             <Grid Style="{StaticResource SettingsInnerGridStyle}">
                 <Grid.ColumnDefinitions>
@@ -77,8 +77,8 @@
                     <RowDefinition Height="15"/>
                 </Grid.RowDefinitions>
                 <TextBox Name="tbSetLiftWeightLimit" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Text="700" Style="{StaticResource SettingsOptionTextBoxStyle}"/>
-                <Button Name="btnIncreaseLiftWeightLimit" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}"/>
-                <Button Name="btnDecreaseLiftWeightLimit" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}"/>
+                <Button Name="btnIncreaseLiftWeightLimit" Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsOptionUpButtonStyle}" Click="btnChangeLiftWeightLimit_Click"/>
+                <Button Name="btnDecreaseLiftWeightLimit" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsOptionDownButtonStyle}" Click="btnChangeLiftWeightLimit_Click"/>
             </Grid>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">

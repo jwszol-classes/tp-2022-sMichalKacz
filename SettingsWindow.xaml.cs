@@ -56,7 +56,20 @@ namespace LiftSimulator
         }
         private void btnChangeNumberOfFloors_Click(object sender, RoutedEventArgs e)
         {
+            tbSetNumberOfFloors.Text = (Convert.ToInt32(tbSetNumberOfFloors.Text) + Convert.ToInt32((sender as Button).Tag)).ToString();
+        }
+        private void btnChangeNumberOfLifts_Click(object sender, RoutedEventArgs e)
+        {
+            tbSetNumberOfLifts.Text = (Convert.ToInt32(tbSetNumberOfLifts.Text) + Convert.ToInt32((sender as Button).Tag)).ToString();
+        }
+        private void btnChangeHumanWeight_Click(object sender, RoutedEventArgs e)
+        {
+            tbSetHumanWeight.Text = (Convert.ToInt32(tbSetHumanWeight.Text) + 5 * Convert.ToInt32((sender as Button).Tag)).ToString();
+        }
 
+        private void btnChangeLiftWeightLimit_Click(object sender, RoutedEventArgs e)
+        {
+            tbSetLiftWeightLimit.Text = (Convert.ToInt32(tbSetLiftWeightLimit.Text) + 50 * Convert.ToInt32((sender as Button).Tag)).ToString();
         }
     }
 }
