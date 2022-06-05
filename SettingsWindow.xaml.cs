@@ -28,7 +28,7 @@ namespace LiftSimulator
             Owner = App.Current.MainWindow;
             InitializeComponent();
         }
-        public void ChangeSettings(ref cSettings S)
+        public bool bChangeSettings(ref cSettings S)
         {
             tbSetNumberOfFloors.Text = S.iNumberOfFloors.ToString();
             tbSetNumberOfLifts.Text = S.iNumberOfLifts.ToString();
@@ -41,11 +41,11 @@ namespace LiftSimulator
                 S.iNumberOfLifts = Convert.ToInt32(tbSetNumberOfLifts.Text);
                 S.iHumanWeight = Convert.ToInt32(tbSetHumanWeight.Text);
                 S.iLiftWeightLimit = Convert.ToInt32(tbSetLiftWeightLimit.Text);
-                return;
+                return true;
             }
             else
             {
-                return;
+                return false;
             }
         }
 
