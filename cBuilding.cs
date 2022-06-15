@@ -18,12 +18,12 @@ namespace LiftSimulator
         int iNumberOfFloors;
          List<cFloor> lFloors = new List<cFloor>();
         
-        static void vAddFloorsToBulding(int iNumberOfFloors)
+        void vAddFloorsToBulding(int iNumberOfFloors)
         {
             
             for(int i = 0; i < iNumberOfFloors; i++)
             {
-               // lFloors.Add(new cFloor() { iNumerOfFloor=i});
+                lFloors.Add(new cFloor() { iNumerOfFloor=i});
             }
         }
         
@@ -35,33 +35,65 @@ namespace LiftSimulator
 
         List<sPassenger> lPassengersOnTheFloor = new List<sPassenger>();
 
-         static void vAddPassengerToTheFloor(int iPresentFloor, int iTargettFloor)
+         void vAddPassengerToTheFloor(int iPresentFloor, int iTargettFloor)
         {
            
-         //   lPassengersOnTheFloor.Add(new sPassenger() { iPresentFloor=iPresentFloor, jTargetFloor=iTargettFloor });
+            lPassengersOnTheFloor.Add(new sPassenger() { iPresentFloor=iPresentFloor, jTargetFloor=iTargettFloor });
             
         }
     }
     class cLift
     {
         int iPresentNumberOfPeopleInside=0;
-        int iMaxWeight;
         int iMaxNumberOfPeopleInside;
         bool bCurrentDirection=true; //0-down, 1-up
 
-        static void vCalculatingTheNextFloor()
+        List<sPassenger> lPassengersInTheFlift = new List<sPassenger>();
+        //int[] iPassengers = new int[iMaxNumberOfPeopleInside];
+
+        void vCalculatingMaxNumberOfPeople(int iMaxWeight, int iWeightOfPerson)
+        {
+            iMaxNumberOfPeopleInside=iMaxWeight/iWeightOfPerson;
+        }
+
+        void vCalculatingTheNextFloor()
         {
 
         }
 
-        static void vAddPassengerToTheLift()
+        void vAddPassengerToTheLift(int iTargettFloor)
         {
-
+            if (iPresentNumberOfPeopleInside < iMaxNumberOfPeopleInside)
+            {
+            lPassengersInTheFlift.Add(new sPassenger() { jTargetFloor=iTargettFloor });
+            iPresentNumberOfPeopleInside=iPresentNumberOfPeopleInside+1;
+            }
+            
         }
 
-        static void vAddPassengersToTheLift()
+         void vRemovePassengerToTheLift(int iTargettFloor)
         {
+            if (iPresentNumberOfPeopleInside > 0)
+            {
+            lPassengersInTheFlift.RemoveAt(iTargettFloor);
+            iPresentNumberOfPeopleInside=iPresentNumberOfPeopleInside+1;
+            }
+            
+        }
 
+        void vAddPassengersToTheLift(List<sPassenger> lPassengersOnTheFloor, int iNumerOfFloor)
+        {
+            if (iPresentNumberOfPeopleInside < iMaxNumberOfPeopleInside)
+            {
+                int iCheckingPerson=0;
+                while ((iMaxNumberOfPeopleInside - iPresentNumberOfPeopleInside>0) && (lPassengersOnTheFloor.Count>iCheckingPerson))
+                {
+                    if ((iNumerOfFloor > lPassengersOnTheFloor[iCheckingPerson].jTargetFloor) && (bCurrentDirection == false))
+                    {
+                        //vAddPassengerToTheLift(lPassengersOnTheFloor[i].jTargetFloor);
+                    }
+                }
+            }
         }
     }
 }
