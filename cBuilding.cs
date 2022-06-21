@@ -61,8 +61,8 @@ namespace LiftSimulator
         void vFullElevatorMovement(List<sPassenger> lPassengersOnTheFloor, int iNumberOfFloor, int iNumberOfFloors)
         {
             vRemovePassengersFromTheLift(lPassengersOnTheFloor, iNumberOfFloor);
-            vCalculatingTheNextFloor(lPassengersOnTheFloor, iNumberOfFloor, iNumberOfFloors)
-            vAddPassengersToTheLift(lPassengersOnTheFloor)
+            vCalculatingTheNextFloor(lPassengersOnTheFloor, iNumberOfFloor, iNumberOfFloors);
+            vAddPassengersToTheLift(lPassengersOnTheFloor);
         }
 
         void vCalculatingTheNextFloor(List<sPassenger> lPassengersOnTheFloor, int iNumberOfFloor, int iNumberOfFloors)
@@ -87,7 +87,7 @@ namespace LiftSimulator
                 }
             }
 
-            if(bCurrentDirection==1)iCurrentLevelOfTheLift=iCurrentLevelOfTheLift+1;
+            if(bCurrentDirection==true)iCurrentLevelOfTheLift=iCurrentLevelOfTheLift+1;
             else iCurrentLevelOfTheLift = iCurrentLevelOfTheLift-1;
         }
        
@@ -95,12 +95,12 @@ namespace LiftSimulator
         {
            
                 int iCheckingPerson=0;
-                while ((iMaxNumberOfPeopleInside - iPresentNumberOfPeopleInside>0) && (lPassengersOnTheFloor.Capacity>iCheckingPerson))//count?
+                while ((iMaxNumberOfPeopleInside - iPresentNumberOfPeopleInside>0) && (lPassengersOnTheFloor.Count>iCheckingPerson))
                 {
                    
                 if (lPassengersOnTheFloor[iCheckingPerson].bDirection==bCurrentDirection)
                     {
-                        lPassengersInTheLift.Add((sPassenger)lPassengersOnTheFloor[iPresentNumberOfPeopleInside]);
+                        lPassengersInTheLift.Add(lPassengersOnTheFloor[iCheckingPerson]);
                         lPassengersOnTheFloor.RemoveAt(iCheckingPerson);
                     }
                 else
