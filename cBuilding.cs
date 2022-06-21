@@ -16,10 +16,9 @@ namespace LiftSimulator
     class cBuilding
     {
         int iNumberOfLifts=1;
-        public int iNumberOfFloors;
-         List<cFloor> lFloors = new List<cFloor>();
+        public List<cFloor> lFloors = new List<cFloor>();
         
-        void vAddFloorsToBulding(int iNumberOfFloors)
+        public void vAddFloorsToBulding(int iNumberOfFloors)
         {
             
             for(int i = 0; i < iNumberOfFloors; i++)
@@ -33,9 +32,9 @@ namespace LiftSimulator
     {
         public int iNumberOfFloor;
 
-        List<sPassenger> lPassengersOnTheFloor = new List<sPassenger>();
+        public List<sPassenger> lPassengersOnTheFloor = new List<sPassenger>();
 
-         void vAddPassengerToTheFloor(int iPresentFloor, int iTargettFloor)
+        public void vAddPassengerToTheFloor(int iPresentFloor, int iTargettFloor)
         {
            bool bDirectonCalc;
            if(iPresentFloor < iTargettFloor)bDirectonCalc = true;

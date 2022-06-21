@@ -23,6 +23,7 @@ namespace LiftSimulator
         List<Button> lbtnLiftButton = new List<Button>();
         List<Rectangle> lrectFloor = new List<Rectangle>();
         List<Rectangle> lrectLift = new List<Rectangle>();
+        int iChosenFloor = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -41,9 +42,8 @@ namespace LiftSimulator
         }
         private void vCreateNewBuilding()
         {
-            /*Building.lFloors.Clear();
-             Building.vAddFloorsToBulding(CurrentSettings.iNumberOfFloors);
-            */
+            Building.lFloors.Clear();
+            Building.vAddFloorsToBulding(CurrentSettings.iNumberOfFloors);
             lrbtnFloorButton.Clear();
             spFloors.Children.Clear();
             spLiftButtons1.Children.Clear();
@@ -72,7 +72,7 @@ namespace LiftSimulator
             {
                 rb.Content = iIndex;
                 rb.Style = Application.Current.FindResource("FloorButtonStyle") as Style;
-                rb.Click += btnFloorLiftClick;
+                rb.Click += rbtnChooseFloorClick;
                 iIndex++;
             }
             iIndex = 0;
@@ -112,10 +112,25 @@ namespace LiftSimulator
                 iIndex++;
             }
         }
-
+        private void rbtnChooseFloorClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton)
+            {
+                iChosenFloor = Convert.ToInt32((sender as RadioButton).Content);
+            }
+        }
         private void btnFloorLiftClick(object sender, RoutedEventArgs e)
         {
-            
+            if(sender is Button)
+            {
+                Building.lFloors[iChosenFloor].vAddPassengerToTheFloor(iChosenFloor, Convert.ToInt32((sender as Button).Content));
+                Image ImgPassenger = new Image();
+                ImgPassenger.Source = new BitmapImage(new Uri("pack://application:,,,/Graphics/BlankPassenger.png", UriKind.Absolute));
+                ImgPassenger.Height = 30;
+                Canvas.SetTop(ImgPassenger, (CurrentSettings.iNumberOfFloors - iChosenFloor - 1) * 35 - 10);
+                Canvas.SetLeft(ImgPassenger, 10 * Building.lFloors[iChosenFloor].lPassengersOnTheFloor.Count);
+                canBuilding.Children.Add(ImgPassenger);
+            }
         }
     }
 }
