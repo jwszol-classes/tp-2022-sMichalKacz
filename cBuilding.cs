@@ -102,6 +102,10 @@ namespace LiftSimulator
             Canvas.SetTop(rectLiftDoorLeft, 40 * iNumberOfFloors - 45);
             Canvas.SetLeft(rectLiftDoorLeft, 260);
         }
+        void vAnimationCompleted(object sender, EventArgs e)
+        {
+            return;
+        }
         public void vMoveLiftUpDownAnimation()
         {
             Storyboard sbLiftMovement = new Storyboard();
@@ -132,7 +136,7 @@ namespace LiftSimulator
             Storyboard.SetTargetProperty(daLeftDoorPosition, new PropertyPath("(Canvas.Top)"));
             Storyboard.SetTarget(daRightDoorPosition, rectLiftDoorRight);
             Storyboard.SetTargetProperty(daRightDoorPosition, new PropertyPath("(Canvas.Top)"));
-
+            sbLiftMovement.Completed += vAnimationCompleted;
             sbLiftMovement.Begin();
         }
         public void vOpenCloseLiftDoorAnimation()
@@ -174,7 +178,7 @@ namespace LiftSimulator
             Storyboard.SetTargetProperty(daRightDoorWidth, new PropertyPath("Width"));
             Storyboard.SetTarget(daRightDoorPosition, rectLiftDoorRight);
             Storyboard.SetTargetProperty(daRightDoorPosition, new PropertyPath("(Canvas.Left)"));
-
+            sbDoorOpening.Completed += vAnimationCompleted;
             sbDoorOpening.Begin();
         }
         void vCalculatingMaxNumberOfPeople(int iMaxWeight, int iWeightOfPerson)

@@ -95,6 +95,7 @@ namespace LiftSimulator
         }
         private void rbtnChooseFloorClick(object sender, RoutedEventArgs e)
         {
+            Building.lLifts[0].vMoveLiftUpDownAnimation();
             if (sender is RadioButton)
             {
                 iChosenFloor = Convert.ToInt32((sender as RadioButton).Content);
