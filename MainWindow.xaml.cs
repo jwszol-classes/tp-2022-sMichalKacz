@@ -20,7 +20,7 @@ namespace LiftSimulator
         cSettings CurrentSettings = new cSettings();
         cBuilding Building = new cBuilding();
         List<Button> lbtnLiftButton = new List<Button>();
-        List<Rectangle> lrectLift = new List<Rectangle>();
+        
         
         int iChosenFloor = 0;
         public MainWindow()
@@ -46,7 +46,6 @@ namespace LiftSimulator
             spFloors.Children.Clear();
             spLiftButtons1.Children.Clear();
             spLiftButtons2.Children.Clear();
-            lrectLift.Clear();
             canBuilding.Children.Clear();
             for (int i = 0; i < CurrentSettings.iNumberOfFloors; i++)
             {
@@ -86,26 +85,17 @@ namespace LiftSimulator
                 iIndex++;
             }
             iIndex = 0;
-            /*cBuilding.vAddLiftsToBulding()
-            */
-            for (int i = 0; i < CurrentSettings.iNumberOfLifts; i++)
+            Building.vAddLiftsToBulding();
+           
+            foreach (cLift l in Building.lLifts)
             {
-                lrectLift.Add(new Rectangle());
-            }
-            iIndex = 0;
-            foreach (Rectangle r in lrectLift)
-            {
-                canBuilding.Children.Add(r);
-                r.Width = 20;
-                r.Height = 25;
-                r.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF555555"));
-                Canvas.SetTop(r, 40 * CurrentSettings.iNumberOfFloors - 40);
-                Canvas.SetLeft(r, 200+ iIndex*25);
-                iIndex++;
+                canBuilding.Children.Add(l.rectLiftDoorLeft);
+                canBuilding.Children.Add(l.rectLiftDoorRight);
             }
         }
         private void rbtnChooseFloorClick(object sender, RoutedEventArgs e)
         {
+            Building.lLifts[0].vMoveLiftUpDownAnimation();
             if (sender is RadioButton)
             {
                 iChosenFloor = Convert.ToInt32((sender as RadioButton).Content);

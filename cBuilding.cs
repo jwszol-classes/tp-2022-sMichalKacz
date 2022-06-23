@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Animation;
 
 namespace LiftSimulator
 {
@@ -46,7 +47,7 @@ namespace LiftSimulator
     {
         int iNumberOfLifts=1;
         public List<cFloor> lFloors = new List<cFloor>();
-        
+        public List<cLift> lLifts = new List<cLift>();
         public void vAddFloorsToBulding(int iNumberOfFloors)
         {
             
@@ -55,7 +56,10 @@ namespace LiftSimulator
                 lFloors.Add(new cFloor() { iNumberOfFloor=i});
             }
         }
-        
+        public void vAddLiftsToBulding()
+        {
+            lLifts.Add(new cLift(lFloors.Count));
+        }
     }
     class cFloor
     {
@@ -69,7 +73,7 @@ namespace LiftSimulator
            bool bDirectonCalc;
            if(iPresentFloor < iTargettFloor)bDirectonCalc = true;
            else bDirectonCalc = false;
-           lPassengersOnTheFloor.Add(new cPassenger((4 - iNumberOfFloor - 1) * 40 - 10, 10 * lPassengersOnTheFloor.Count, iTargettFloor) { iPresentFloor=iPresentFloor, iTargetFloor=iTargettFloor , bDirection=bDirectonCalc});
+           lPassengersOnTheFloor.Add(new cPassenger((iNumberOfFloors - iNumberOfFloor - 1) * 40 - 10, 150 - 10 * lPassengersOnTheFloor.Count, iTargettFloor) { iPresentFloor=iPresentFloor, iTargetFloor=iTargettFloor , bDirection=bDirectonCalc});
         }
     }
     class cLift
@@ -77,11 +81,102 @@ namespace LiftSimulator
         int iPresentNumberOfPeopleInside=0;
         int iMaxNumberOfPeopleInside;
         int iCurrentLevelOfTheLift=0;
-        bool bCurrentDirection=true; //0-down, 1-up
+        bool bCurrentDirection = true; //0-down, 1-up
+        bool bIsOpened = false;
+        public Rectangle rectLiftDoorRight = new Rectangle();
+        public Rectangle rectLiftDoorLeft = new Rectangle();
 
         List<cPassenger> lPassengersInTheLift = new List<cPassenger>();
         //int[] iPassengers = new int[iMaxNumberOfPeopleInside];
+        public cLift(int iNumberOfFloors)
+        {
+            rectLiftDoorRight.Width = 10;
+            rectLiftDoorRight.Height = 30;
+            rectLiftDoorRight.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF555555"));
+            Canvas.SetTop(rectLiftDoorRight, 40 * iNumberOfFloors - 45);
+            Canvas.SetLeft(rectLiftDoorRight, 270);
 
+            rectLiftDoorLeft.Width = 10;
+            rectLiftDoorLeft.Height = 30;
+            rectLiftDoorLeft.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF555555"));
+            Canvas.SetTop(rectLiftDoorLeft, 40 * iNumberOfFloors - 45);
+            Canvas.SetLeft(rectLiftDoorLeft, 260);
+        }
+        public void vMoveLiftUpDownAnimation()
+        {
+            Storyboard sbLiftMovement = new Storyboard();
+            sbLiftMovement.Duration = new Duration(TimeSpan.FromSeconds(3));
+
+            DoubleAnimation daLeftDoorPosition = new DoubleAnimation();
+            DoubleAnimation daRightDoorPosition = new DoubleAnimation();
+            daLeftDoorPosition.Duration = sbLiftMovement.Duration;
+            daRightDoorPosition.Duration = sbLiftMovement.Duration;
+            sbLiftMovement.Children.Add(daLeftDoorPosition);
+            sbLiftMovement.Children.Add(daRightDoorPosition);
+            if (bCurrentDirection)
+            {
+                daLeftDoorPosition.From = Canvas.GetTop(rectLiftDoorLeft);
+                daLeftDoorPosition.To = Canvas.GetTop(rectLiftDoorLeft) - 40;
+                daRightDoorPosition.From = Canvas.GetTop(rectLiftDoorRight);
+                daRightDoorPosition.To = Canvas.GetTop(rectLiftDoorRight) - 40;
+            }
+            else
+            {
+                daLeftDoorPosition.From = Canvas.GetTop(rectLiftDoorLeft);
+                daLeftDoorPosition.To = Canvas.GetTop(rectLiftDoorLeft) + 40;
+                daRightDoorPosition.From = Canvas.GetTop(rectLiftDoorRight);
+                daRightDoorPosition.To = Canvas.GetTop(rectLiftDoorRight) + 40;
+            }
+            bIsOpened = !bIsOpened;
+            Storyboard.SetTarget(daLeftDoorPosition, rectLiftDoorLeft);
+            Storyboard.SetTargetProperty(daLeftDoorPosition, new PropertyPath("(Canvas.Top)"));
+            Storyboard.SetTarget(daRightDoorPosition, rectLiftDoorRight);
+            Storyboard.SetTargetProperty(daRightDoorPosition, new PropertyPath("(Canvas.Top)"));
+
+            sbLiftMovement.Begin();
+        }
+        public void vOpenCloseLiftDoorAnimation()
+        {
+            Storyboard sbDoorOpening = new Storyboard();
+            sbDoorOpening.Duration = new Duration(TimeSpan.FromSeconds(3));
+
+            DoubleAnimation daLeftDoorWidth = new DoubleAnimation();
+            DoubleAnimation daRightDoorWidth = new DoubleAnimation();
+            DoubleAnimation daRightDoorPosition = new DoubleAnimation();
+            daLeftDoorWidth.Duration = sbDoorOpening.Duration;
+            daRightDoorWidth.Duration = sbDoorOpening.Duration;
+            daRightDoorPosition.Duration = sbDoorOpening.Duration;
+            sbDoorOpening.Children.Add(daLeftDoorWidth);
+            sbDoorOpening.Children.Add(daRightDoorWidth);
+            sbDoorOpening.Children.Add(daRightDoorPosition);
+            if (bIsOpened)
+            {
+                daLeftDoorWidth.From = 1;
+                daLeftDoorWidth.To = 10;
+                daRightDoorWidth.From = 1;
+                daRightDoorWidth.To = 10;
+                daRightDoorPosition.From = Canvas.GetLeft(rectLiftDoorRight);
+                daRightDoorPosition.To = Canvas.GetLeft(rectLiftDoorRight) - 9;
+            }
+            else
+            {
+                daLeftDoorWidth.From = 10;
+                daLeftDoorWidth.To = 1;
+                daRightDoorWidth.From = 10;
+                daRightDoorWidth.To = 1;
+                daRightDoorPosition.From = Canvas.GetLeft(rectLiftDoorRight);
+                daRightDoorPosition.To = Canvas.GetLeft(rectLiftDoorRight) + 9;
+            }
+            bIsOpened = !bIsOpened;
+            Storyboard.SetTarget(daLeftDoorWidth, rectLiftDoorLeft);
+            Storyboard.SetTargetProperty(daLeftDoorWidth, new PropertyPath("Width"));
+            Storyboard.SetTarget(daRightDoorWidth, rectLiftDoorRight);
+            Storyboard.SetTargetProperty(daRightDoorWidth, new PropertyPath("Width"));
+            Storyboard.SetTarget(daRightDoorPosition, rectLiftDoorRight);
+            Storyboard.SetTargetProperty(daRightDoorPosition, new PropertyPath("(Canvas.Left)"));
+
+            sbDoorOpening.Begin();
+        }
         void vCalculatingMaxNumberOfPeople(int iMaxWeight, int iWeightOfPerson)
         {
             iMaxNumberOfPeopleInside=iMaxWeight/iWeightOfPerson;
