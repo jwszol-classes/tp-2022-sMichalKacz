@@ -3,14 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Shapes;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace LiftSimulator
 {
-    public struct sPassenger
+    class cPassenger
     {
         public int iPresentFloor;
-        public int jTargetFloor;
+        public int iTargetFloor;
         public bool bDirection; //0-down, 1-up
+        public Image imgPassenger = new Image();
+        public TextBlock tbTargetFloor = new TextBlock();
+        public cPassenger(int iTopPosition, int iLeftPosition, int iTargetFloor)
+        {
+            tbTargetFloor.Visibility = Visibility.Hidden;
+            imgPassenger.Source = new BitmapImage(new Uri("pack://application:,,,/Graphics/BlankPassenger.png", UriKind.Absolute));
+            imgPassenger.Height = 30;
+            imgPassenger.MouseEnter += imgPassengerMouseOver;
+            imgPassenger.MouseLeave += imgPassengerMouseLeave;
+            imgPassenger.Tag =iTargetFloor;
+            Canvas.SetTop(imgPassenger, iTopPosition);
+            Canvas.SetLeft(imgPassenger, iLeftPosition);
+        }
+        private void imgPassengerMouseOver(object sender, RoutedEventArgs e)
+        {
+            tbTargetFloor.Visibility = Visibility.Visible;
+            tbTargetFloor.Text = (sender as Image).Tag.ToString();
+            Canvas.SetTop(tbTargetFloor, 0);
+            Canvas.SetLeft(tbTargetFloor, 0);
+        }
+        private void imgPassengerMouseLeave(object sender, RoutedEventArgs e)
+        {
+            tbTargetFloor.Visibility = Visibility.Hidden;
+        }
     }
 
     class cBuilding
@@ -31,15 +60,16 @@ namespace LiftSimulator
     class cFloor
     {
         public int iNumberOfFloor;
+        public RadioButton rbtnFloorButton = new RadioButton();
+        public Rectangle rectFloor = new Rectangle();
+        public List<cPassenger> lPassengersOnTheFloor = new List<cPassenger>();
 
-        public List<sPassenger> lPassengersOnTheFloor = new List<sPassenger>();
-
-        public void vAddPassengerToTheFloor(int iPresentFloor, int iTargettFloor)
+        public void vAddPassengerToTheFloor(int iPresentFloor, int iTargettFloor, int iNumberOfFloors)
         {
            bool bDirectonCalc;
            if(iPresentFloor < iTargettFloor)bDirectonCalc = true;
            else bDirectonCalc = false;
-           lPassengersOnTheFloor.Add(new sPassenger() { iPresentFloor=iPresentFloor, jTargetFloor=iTargettFloor , bDirection=bDirectonCalc});
+           lPassengersOnTheFloor.Add(new cPassenger((4 - iNumberOfFloor - 1) * 40 - 10, 10 * lPassengersOnTheFloor.Count, iTargettFloor) { iPresentFloor=iPresentFloor, iTargetFloor=iTargettFloor , bDirection=bDirectonCalc});
         }
     }
     class cLift
@@ -49,7 +79,7 @@ namespace LiftSimulator
         int iCurrentLevelOfTheLift=0;
         bool bCurrentDirection=true; //0-down, 1-up
 
-        List<sPassenger> lPassengersInTheLift = new List<sPassenger>();
+        List<cPassenger> lPassengersInTheLift = new List<cPassenger>();
         //int[] iPassengers = new int[iMaxNumberOfPeopleInside];
 
         void vCalculatingMaxNumberOfPeople(int iMaxWeight, int iWeightOfPerson)
@@ -57,14 +87,14 @@ namespace LiftSimulator
             iMaxNumberOfPeopleInside=iMaxWeight/iWeightOfPerson;
         }
 
-        void vFullElevatorMovement(List<sPassenger> lPassengersOnTheFloor, int iNumberOfFloor, int iNumberOfFloors)
+        void vFullElevatorMovement(List<cPassenger> lPassengersOnTheFloor, int iNumberOfFloor, int iNumberOfFloors)
         {
             vRemovePassengersFromTheLift(lPassengersOnTheFloor, iNumberOfFloor);
             vCalculatingTheNextFloor(lPassengersOnTheFloor, iNumberOfFloor, iNumberOfFloors);
             vAddPassengersToTheLift(lPassengersOnTheFloor);
         }
 
-        void vCalculatingTheNextFloor(List<sPassenger> lPassengersOnTheFloor, int iNumberOfFloor, int iNumberOfFloors)
+        void vCalculatingTheNextFloor(List<cPassenger> lPassengersOnTheFloor, int iNumberOfFloor, int iNumberOfFloors)
         {
             if (iNumberOfFloor == 0)
             {
@@ -90,7 +120,7 @@ namespace LiftSimulator
             else iCurrentLevelOfTheLift = iCurrentLevelOfTheLift-1;
         }
        
-        void vAddPassengersToTheLift(List<sPassenger> lPassengersOnTheFloor)
+        void vAddPassengersToTheLift(List<cPassenger> lPassengersOnTheFloor)
         {
            
                 int iCheckingPerson=0;
@@ -110,13 +140,13 @@ namespace LiftSimulator
                 
         }
 
-        void vRemovePassengersFromTheLift(List<sPassenger> lPassengersOnTheFloor, int iNumberOfFloor)
+        void vRemovePassengersFromTheLift(List<cPassenger> lPassengersOnTheFloor, int iNumberOfFloor)
         {
             int iCheckingPerson=0;
                 while ((iPresentNumberOfPeopleInside>iCheckingPerson))
                 {
                    
-                if (lPassengersOnTheFloor[iCheckingPerson].jTargetFloor==iNumberOfFloor)
+                if (lPassengersOnTheFloor[iCheckingPerson].iTargetFloor==iNumberOfFloor)
                     {
                         
                         //lPassengersOnTheFloor.Add((sPassenger)lPassengersInTheLift[iCheckingPerson]);
