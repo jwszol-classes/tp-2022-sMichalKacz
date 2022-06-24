@@ -41,6 +41,27 @@ namespace LiftSimulator
         {
             tbTargetFloor.Visibility = Visibility.Hidden;
         }
+        void vAnimationCompleted(object sender, EventArgs e)
+        {
+            return;
+        }
+        public void vMovePassengerAnimation(int iDistance)
+        {
+            Storyboard sbPassengerMovement = new Storyboard();
+            sbPassengerMovement.Duration = new Duration(TimeSpan.FromSeconds(iDistance/5));
+
+            DoubleAnimation daLeftDoorPosition = new DoubleAnimation();
+            daLeftDoorPosition.Duration = sbPassengerMovement.Duration;
+            sbPassengerMovement.Children.Add(daLeftDoorPosition);
+
+            daLeftDoorPosition.From = Canvas.GetTop(imgPassenger);
+            daLeftDoorPosition.To = Canvas.GetTop(imgPassenger) + iDistance;
+
+            Storyboard.SetTarget(daLeftDoorPosition, imgPassenger);
+            Storyboard.SetTargetProperty(daLeftDoorPosition, new PropertyPath("(Canvas.Left)"));
+            sbPassengerMovement.Completed += vAnimationCompleted;
+            sbPassengerMovement.Begin();
+        }
     }
 
     class cBuilding
