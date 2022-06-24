@@ -108,6 +108,7 @@ namespace LiftSimulator
                 canBuilding.Children.Add(Building.lFloors[iChosenFloor].lPassengersOnTheFloor[Building.lFloors[iChosenFloor].lPassengersOnTheFloor.Count-1].imgPassenger);
                 canBuilding.Children.Add(Building.lFloors[iChosenFloor].lPassengersOnTheFloor[Building.lFloors[iChosenFloor].lPassengersOnTheFloor.Count - 1].tbTargetFloor);
             }
+            Building.vMoveLiftUpDownAnimationCompleted(sender, e);
         }
         
     }
