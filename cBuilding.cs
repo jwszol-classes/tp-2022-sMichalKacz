@@ -16,7 +16,9 @@ namespace LiftSimulator
     {
         public int iPresentFloor;
         public int iTargetFloor;
+        public int iPositionInLift = 0;
         public bool bDirection; //0-down, 1-up
+        public bool bAnimationInProgress = false;
         public Image imgPassenger = new Image();
         public TextBlock tbTargetFloor = new TextBlock();
         public cPassenger(int iTopPosition, int iLeftPosition, int iTargetFloor)
@@ -43,22 +45,29 @@ namespace LiftSimulator
         }
         void vAnimationCompleted(object sender, EventArgs e)
         {
+            bAnimationInProgress = false;
+            Canvas.SetLeft(imgPassenger, 500+ 20*iPositionInLift);
+            Canvas.SetTop(imgPassenger, 100);
+            imgPassenger.Height = 60;
             return;
         }
-        public void vMovePassengerAnimation(int iDistance)
-        {
+        public void vMovePassengerAnimation(int iTargetPosition)
+        {   
+
+            bAnimationInProgress = true;
             Storyboard sbPassengerMovement = new Storyboard();
-            sbPassengerMovement.Duration = new Duration(TimeSpan.FromSeconds(iDistance/5));
+            sbPassengerMovement.Duration = new Duration(TimeSpan.FromSeconds((iTargetPosition - Canvas.GetLeft(imgPassenger))/ 25));
 
-            DoubleAnimation daLeftDoorPosition = new DoubleAnimation();
-            daLeftDoorPosition.Duration = sbPassengerMovement.Duration;
-            sbPassengerMovement.Children.Add(daLeftDoorPosition);
+            DoubleAnimation daPassengerPosition = new DoubleAnimation();
+            daPassengerPosition.Duration = sbPassengerMovement.Duration;
+            sbPassengerMovement.Children.Add(daPassengerPosition);
 
-            daLeftDoorPosition.From = Canvas.GetTop(imgPassenger);
-            daLeftDoorPosition.To = Canvas.GetTop(imgPassenger) + iDistance;
+            daPassengerPosition.From = Canvas.GetLeft(imgPassenger);
+            daPassengerPosition.To = iTargetPosition;
 
-            Storyboard.SetTarget(daLeftDoorPosition, imgPassenger);
-            Storyboard.SetTargetProperty(daLeftDoorPosition, new PropertyPath("(Canvas.Left)"));
+            Storyboard.SetTarget(daPassengerPosition, imgPassenger);
+            Storyboard.SetTargetProperty(daPassengerPosition, new PropertyPath("(Canvas.Left)"));
+            sbPassengerMovement.FillBehavior = FillBehavior.Stop;
             sbPassengerMovement.Completed += vAnimationCompleted;
             sbPassengerMovement.Begin();
         }
@@ -85,6 +94,12 @@ namespace LiftSimulator
         public void vAddLiftsToBulding()
         {
             lLifts.Add(new cLift(lFloors.Count));
+            foreach (cLift l in lLifts)
+            {
+                canBuilding.Children.Add(l.rectLiftDoorLeft);
+                canBuilding.Children.Add(l.rectLiftDoorRight);
+                canBuilding.Children.Add(l.rectLiftInside);
+            }
         }
 
         public void vMoveLiftUpDownAnimationCompleted(object sender, EventArgs e)
@@ -121,11 +136,21 @@ namespace LiftSimulator
             lLifts[0].vRemovePassengersFromTheLift(lLifts[0].lPassengersInTheLift, iNumberOfFloor);
                 vCalculatingTheNextFloor(iNumberOfFloor);
             lLifts[0].vAddPassengersToTheLift(lFloors[iNumberOfFloor].lPassengersOnTheFloor);
-            vOpenCloseLiftDoorAnimation();
+                foreach (cPassenger p in lLifts[0].lPassengersInTheLift)
+                {
+                    if (p.bAnimationInProgress)
+                    {
+                        vWait();
+                        return;
+                    }
+                }
+                vOpenCloseLiftDoorAnimation();
+                
             }
             else
             {
                 //vCalculatingTheNextFloor(iNumberOfFloor);
+                
                 vMoveLiftUpDownAnimation();
             }
             
@@ -157,7 +182,13 @@ namespace LiftSimulator
             sbLiftMovement.Completed += vMoveLiftUpDownAnimationCompleted;
             sbLiftMovement.Begin();
         }
-
+        public void vWait(double dTime = 0.5)
+        {
+            Storyboard sbWait = new Storyboard();
+            sbWait.Duration = new Duration(TimeSpan.FromSeconds(dTime));
+            sbWait.Completed += vOpenCloseLiftDoorAnimationCompleted;
+            sbWait.Begin();
+        }
         public void vOpenCloseLiftDoorAnimation()
         {
             lLifts[0].bAnimationInProgress = true;
@@ -262,7 +293,7 @@ namespace LiftSimulator
            bool bDirectonCalc;
            if(iPresentFloor < iTargettFloor)bDirectonCalc = true;
            else bDirectonCalc = false;
-           lPassengersOnTheFloor.Add(new cPassenger((iNumberOfFloors - iNumberOfFloor - 1) * 40 - 10, 150 - 10 * lPassengersOnTheFloor.Count, iTargettFloor) { iPresentFloor=iPresentFloor, iTargetFloor=iTargettFloor , bDirection=bDirectonCalc});
+           lPassengersOnTheFloor.Add(new cPassenger((iNumberOfFloors - iNumberOfFloor - 1) * 40 - 10, 230 - 10 * lPassengersOnTheFloor.Count, iTargettFloor) { iPresentFloor=iPresentFloor, iTargetFloor=iTargettFloor , bDirection=bDirectonCalc});
         }
     }
     class cLift
@@ -328,8 +359,9 @@ namespace LiftSimulator
                      ((lPassengersOnTheFloor[iCheckingPerson].iTargetFloor-iCurrentLevelOfTheLift<0)&&(bCurrentDirection==false)))*/
 
                 {
+                    lPassengersOnTheFloor[iCheckingPerson].iPositionInLift = lPassengersInTheLift.Count;
                     lPassengersInTheLift.Add(lPassengersOnTheFloor[iCheckingPerson]);
-                    lPassengersOnTheFloor[iCheckingPerson].imgPassenger.Visibility = Visibility.Hidden;
+                    lPassengersOnTheFloor[iCheckingPerson].vMovePassengerAnimation(260);
                     lPassengersOnTheFloor.RemoveAt(iCheckingPerson);
                     iPresentNumberOfPeopleInside = iPresentNumberOfPeopleInside + 1;
                 }

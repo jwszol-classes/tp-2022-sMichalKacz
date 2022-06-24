@@ -90,15 +90,7 @@ namespace LiftSimulator
                 iIndex++;
             }
             iIndex = 0;
-            Building.vAddLiftsToBulding();
-           
-            foreach (cLift l in Building.lLifts)
-            {
-                Building.canBuilding.Children.Add(l.rectLiftDoorLeft);
-                Building.canBuilding.Children.Add(l.rectLiftDoorRight);
-                Building.canBuilding.Children.Add(l.rectLiftInside);
-            }
-            
+            Building.vAddLiftsToBulding();            
         }
         private void rbtnChooseFloorClick(object sender, RoutedEventArgs e)
         {
