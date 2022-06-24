@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LiftSimulator"
         mc:Ignorable="d"
-        Title="Symulator windy" Height="450" Width="800">
-    <Grid>
+        Title="Symulator windy" MinWidth="1200" MinHeight="600" Width="1200" Height="600">
+    <Grid Name="gMainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
             <RowDefinition x:Name="grContent" Height="*"/>
@@ -23,7 +23,6 @@
             <StackPanel Name="spLiftButtons2" Orientation="Vertical"/>
         </StackPanel>
         <StackPanel Name="spFloors" Orientation="Vertical" Grid.Column="1" Grid.Row="1"/>
-        <Canvas x:Name="canBuilding" Grid.Row="1" Grid.Column="2"/>
         <Button x:Name="btnSettings" Grid.Row="0" Grid.Column="3" Style="{StaticResource SettingsButtonStyle}" Click="btnSettings_Click"></Button>
         <Rectangle Name="rectDarkWindow" Grid.ColumnSpan="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=ColumnDefinitions.Count, Mode=OneWay}" Grid.RowSpan="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=RowDefinitions.Count, Mode=OneWay}" Visibility="Collapsed" Fill="DarkGray" Opacity="0.4"/>
     </Grid>

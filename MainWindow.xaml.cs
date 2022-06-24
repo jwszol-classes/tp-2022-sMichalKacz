@@ -18,7 +18,7 @@ namespace LiftSimulator
     public partial class MainWindow : Window
     {
         cSettings CurrentSettings = new cSettings();
-        cBuilding Building = new cBuilding();
+        cBuilding Building;
         List<Button> lbtnLiftButton = new List<Button>();
         
         
@@ -41,15 +41,17 @@ namespace LiftSimulator
         }
         private void vCreateNewBuilding()
         {
-            Building.lFloors.Clear();
-            Building.lLifts.Clear();
+            if(Building!=null)
+            {
+                gMainGrid.Children.Remove(Building.canBuilding);
+            }
+            Building = new cBuilding();
             Building.vAddFloorsToBulding(CurrentSettings.iNumberOfFloors);
             spFloors.Children.Clear();
             spLiftButtons1.Children.Clear();
             spLiftButtons2.Children.Clear();
             lbtnLiftButton.Clear();
-            canBuilding.Children.Clear();
-
+            gMainGrid.Children.Add(Building.canBuilding);
             for (int i = 0; i < CurrentSettings.iNumberOfFloors; i++)
             {
                 lbtnLiftButton.Add(new Button());
@@ -67,7 +69,7 @@ namespace LiftSimulator
             int iIndex = 0;
             foreach (cFloor f in Building.lFloors)
             {
-                canBuilding.Children.Add(f.rectFloor);
+                Building.canBuilding.Children.Add(f.rectFloor);
                 f.rectFloor.Width = 400;
                 f.rectFloor.Height = 5;
                 f.rectFloor.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF000000"));
@@ -92,9 +94,11 @@ namespace LiftSimulator
            
             foreach (cLift l in Building.lLifts)
             {
-                canBuilding.Children.Add(l.rectLiftDoorLeft);
-                canBuilding.Children.Add(l.rectLiftDoorRight);
+                Building.canBuilding.Children.Add(l.rectLiftDoorLeft);
+                Building.canBuilding.Children.Add(l.rectLiftDoorRight);
+                Building.canBuilding.Children.Add(l.rectLiftInside);
             }
+            
         }
         private void rbtnChooseFloorClick(object sender, RoutedEventArgs e)
         {
@@ -110,8 +114,8 @@ namespace LiftSimulator
                 if (Convert.ToInt32((sender as Button).Content) == iChosenFloor)
                     return;
                 Building.lFloors[iChosenFloor].vAddPassengerToTheFloor(iChosenFloor, Convert.ToInt32((sender as Button).Content), CurrentSettings.iNumberOfFloors);
-                canBuilding.Children.Add(Building.lFloors[iChosenFloor].lPassengersOnTheFloor[Building.lFloors[iChosenFloor].lPassengersOnTheFloor.Count-1].imgPassenger);
-                canBuilding.Children.Add(Building.lFloors[iChosenFloor].lPassengersOnTheFloor[Building.lFloors[iChosenFloor].lPassengersOnTheFloor.Count - 1].tbTargetFloor);
+                Building.canBuilding.Children.Add(Building.lFloors[iChosenFloor].lPassengersOnTheFloor[Building.lFloors[iChosenFloor].lPassengersOnTheFloor.Count-1].imgPassenger);
+                Building.canBuilding.Children.Add(Building.lFloors[iChosenFloor].lPassengersOnTheFloor[Building.lFloors[iChosenFloor].lPassengersOnTheFloor.Count - 1].tbTargetFloor);
             }
             Building.vMoveLiftUpDownAnimationCompleted(null, null);
         }

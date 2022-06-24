@@ -70,10 +70,11 @@ namespace LiftSimulator
         public int iNumberOfFloors;
         public List<cFloor> lFloors = new List<cFloor>();
         public List<cLift> lLifts = new List<cLift>();
-
+        public Canvas canBuilding = new Canvas();
         public void vAddFloorsToBulding(int inewNumberOfFloors)
         {
-            
+            Grid.SetRow(canBuilding, 1);
+            Grid.SetColumn(canBuilding, 2);
             for(int i = 0; i < inewNumberOfFloors; i++)
             {
                 lFloors.Add(new cFloor() { iNumberOfFloor=i});
@@ -274,6 +275,7 @@ namespace LiftSimulator
         public bool bAnimationInProgress = false;
         public Rectangle rectLiftDoorRight = new Rectangle();
         public Rectangle rectLiftDoorLeft = new Rectangle();
+        public Rectangle rectLiftInside = new Rectangle();
 
         public List<cPassenger> lPassengersInTheLift = new List<cPassenger>();
         public cLift(int iNumberOfFloors)
@@ -289,6 +291,14 @@ namespace LiftSimulator
             rectLiftDoorLeft.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF555555"));
             Canvas.SetTop(rectLiftDoorLeft, 40 * iNumberOfFloors - 45);
             Canvas.SetLeft(rectLiftDoorLeft, 260);
+
+            rectLiftInside.Width = 600;
+            rectLiftInside.Height = 200;
+            rectLiftInside.Stroke = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF555555"));
+            rectLiftInside.StrokeThickness = 5;
+            rectLiftInside.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            Canvas.SetTop(rectLiftInside, 40);
+            Canvas.SetLeft(rectLiftInside, 430);
         }
         cLift(cSettings s)
         {
@@ -312,16 +322,17 @@ namespace LiftSimulator
                 int iCheckingPerson=0;
                 while ((iMaxNumberOfPeopleInside - iPresentNumberOfPeopleInside>0) && (lPassengersOnTheFloor.Count>iCheckingPerson))
                 {
-                   
-                if (lPassengersOnTheFloor[iCheckingPerson].bDirection==(iCurrentDirection>0))
-               /* if (((lPassengersOnTheFloor[iCheckingPerson].iTargetFloor-iCurrentLevelOfTheLift>0)&&(bCurrentDirection==true))||
-                    ((lPassengersOnTheFloor[iCheckingPerson].iTargetFloor-iCurrentLevelOfTheLift<0)&&(bCurrentDirection==false)))*/
 
-                    {
-                        lPassengersInTheLift.Add(lPassengersOnTheFloor[iCheckingPerson]);
-                        lPassengersOnTheFloor.RemoveAt(iCheckingPerson);
-                        iPresentNumberOfPeopleInside=iPresentNumberOfPeopleInside+1;
-                    }
+                if (lPassengersOnTheFloor[iCheckingPerson].bDirection == (iCurrentDirection > 0))
+                /* if (((lPassengersOnTheFloor[iCheckingPerson].iTargetFloor-iCurrentLevelOfTheLift>0)&&(bCurrentDirection==true))||
+                     ((lPassengersOnTheFloor[iCheckingPerson].iTargetFloor-iCurrentLevelOfTheLift<0)&&(bCurrentDirection==false)))*/
+
+                {
+                    lPassengersInTheLift.Add(lPassengersOnTheFloor[iCheckingPerson]);
+                    lPassengersOnTheFloor[iCheckingPerson].imgPassenger.Visibility = Visibility.Hidden;
+                    lPassengersOnTheFloor.RemoveAt(iCheckingPerson);
+                    iPresentNumberOfPeopleInside = iPresentNumberOfPeopleInside + 1;
+                }
                 else
                 {
                     iCheckingPerson=iCheckingPerson+1;
