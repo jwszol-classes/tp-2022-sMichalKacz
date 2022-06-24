@@ -81,6 +81,84 @@ namespace LiftSimulator
         {
             lLifts.Add(new cLift(lFloors.Count));
         }
+        void vAnimationCompleted(object sender, EventArgs e)
+        {
+            return;
+        }
+        public void vMoveLiftUpDownAnimation()
+        {
+            Storyboard sbLiftMovement = new Storyboard();
+            sbLiftMovement.Duration = new Duration(TimeSpan.FromSeconds(3));
+
+            DoubleAnimation daLeftDoorPosition = new DoubleAnimation();
+            DoubleAnimation daRightDoorPosition = new DoubleAnimation();
+            daLeftDoorPosition.Duration = sbLiftMovement.Duration;
+            daRightDoorPosition.Duration = sbLiftMovement.Duration;
+            sbLiftMovement.Children.Add(daLeftDoorPosition);
+            sbLiftMovement.Children.Add(daRightDoorPosition);
+            if (lLifts[0].bCurrentDirection)
+            {
+                daLeftDoorPosition.From = Canvas.GetTop(lLifts[0].rectLiftDoorLeft);
+                daLeftDoorPosition.To = Canvas.GetTop(lLifts[0].rectLiftDoorLeft) - 40;
+                daRightDoorPosition.From = Canvas.GetTop(lLifts[0].rectLiftDoorRight);
+                daRightDoorPosition.To = Canvas.GetTop(lLifts[0].rectLiftDoorRight) - 40;
+            }
+            else
+            {
+                daLeftDoorPosition.From = Canvas.GetTop(lLifts[0].rectLiftDoorLeft);
+                daLeftDoorPosition.To = Canvas.GetTop(lLifts[0].rectLiftDoorLeft) + 40;
+                daRightDoorPosition.From = Canvas.GetTop(lLifts[0].rectLiftDoorRight);
+                daRightDoorPosition.To = Canvas.GetTop(lLifts[0].rectLiftDoorRight) + 40;
+            }
+            Storyboard.SetTarget(daLeftDoorPosition, lLifts[0].rectLiftDoorLeft);
+            Storyboard.SetTargetProperty(daLeftDoorPosition, new PropertyPath("(Canvas.Top)"));
+            Storyboard.SetTarget(daRightDoorPosition, lLifts[0].rectLiftDoorRight);
+            Storyboard.SetTargetProperty(daRightDoorPosition, new PropertyPath("(Canvas.Top)"));
+            sbLiftMovement.Completed += vAnimationCompleted;
+            sbLiftMovement.Begin();
+        }
+        public void vOpenCloseLiftDoorAnimation()
+        {
+            Storyboard sbDoorOpening = new Storyboard();
+            sbDoorOpening.Duration = new Duration(TimeSpan.FromSeconds(3));
+
+            DoubleAnimation daLeftDoorWidth = new DoubleAnimation();
+            DoubleAnimation daRightDoorWidth = new DoubleAnimation();
+            DoubleAnimation daRightDoorPosition = new DoubleAnimation();
+            daLeftDoorWidth.Duration = sbDoorOpening.Duration;
+            daRightDoorWidth.Duration = sbDoorOpening.Duration;
+            daRightDoorPosition.Duration = sbDoorOpening.Duration;
+            sbDoorOpening.Children.Add(daLeftDoorWidth);
+            sbDoorOpening.Children.Add(daRightDoorWidth);
+            sbDoorOpening.Children.Add(daRightDoorPosition);
+            if (lLifts[0].bIsOpened)
+            {
+                daLeftDoorWidth.From = 1;
+                daLeftDoorWidth.To = 10;
+                daRightDoorWidth.From = 1;
+                daRightDoorWidth.To = 10;
+                daRightDoorPosition.From = Canvas.GetLeft(lLifts[0].rectLiftDoorRight);
+                daRightDoorPosition.To = Canvas.GetLeft(lLifts[0].rectLiftDoorRight) - 9;
+            }
+            else
+            {
+                daLeftDoorWidth.From = 10;
+                daLeftDoorWidth.To = 1;
+                daRightDoorWidth.From = 10;
+                daRightDoorWidth.To = 1;
+                daRightDoorPosition.From = Canvas.GetLeft(lLifts[0].rectLiftDoorRight);
+                daRightDoorPosition.To = Canvas.GetLeft(lLifts[0].rectLiftDoorRight) + 9;
+            }
+            lLifts[0].bIsOpened = !lLifts[0].bIsOpened;
+            Storyboard.SetTarget(daLeftDoorWidth, lLifts[0].rectLiftDoorLeft);
+            Storyboard.SetTargetProperty(daLeftDoorWidth, new PropertyPath("Width"));
+            Storyboard.SetTarget(daRightDoorWidth, lLifts[0].rectLiftDoorRight);
+            Storyboard.SetTargetProperty(daRightDoorWidth, new PropertyPath("Width"));
+            Storyboard.SetTarget(daRightDoorPosition, lLifts[0].rectLiftDoorRight);
+            Storyboard.SetTargetProperty(daRightDoorPosition, new PropertyPath("(Canvas.Left)"));
+            sbDoorOpening.Completed += vAnimationCompleted;
+            sbDoorOpening.Begin();
+        }
     }
     class cFloor
     {
@@ -102,8 +180,8 @@ namespace LiftSimulator
         int iPresentNumberOfPeopleInside=0;
         int iMaxNumberOfPeopleInside;
         int iCurrentLevelOfTheLift=0;
-        bool bCurrentDirection = true; //0-down, 1-up
-        bool bIsOpened = false;
+        public bool bCurrentDirection = true; //0-down, 1-up
+        public bool bIsOpened = false;
         public Rectangle rectLiftDoorRight = new Rectangle();
         public Rectangle rectLiftDoorLeft = new Rectangle();
 
@@ -123,85 +201,7 @@ namespace LiftSimulator
             Canvas.SetTop(rectLiftDoorLeft, 40 * iNumberOfFloors - 45);
             Canvas.SetLeft(rectLiftDoorLeft, 260);
         }
-        void vAnimationCompleted(object sender, EventArgs e)
-        {
-            return;
-        }
-        public void vMoveLiftUpDownAnimation()
-        {
-            Storyboard sbLiftMovement = new Storyboard();
-            sbLiftMovement.Duration = new Duration(TimeSpan.FromSeconds(3));
-
-            DoubleAnimation daLeftDoorPosition = new DoubleAnimation();
-            DoubleAnimation daRightDoorPosition = new DoubleAnimation();
-            daLeftDoorPosition.Duration = sbLiftMovement.Duration;
-            daRightDoorPosition.Duration = sbLiftMovement.Duration;
-            sbLiftMovement.Children.Add(daLeftDoorPosition);
-            sbLiftMovement.Children.Add(daRightDoorPosition);
-            if (bCurrentDirection)
-            {
-                daLeftDoorPosition.From = Canvas.GetTop(rectLiftDoorLeft);
-                daLeftDoorPosition.To = Canvas.GetTop(rectLiftDoorLeft) - 40;
-                daRightDoorPosition.From = Canvas.GetTop(rectLiftDoorRight);
-                daRightDoorPosition.To = Canvas.GetTop(rectLiftDoorRight) - 40;
-            }
-            else
-            {
-                daLeftDoorPosition.From = Canvas.GetTop(rectLiftDoorLeft);
-                daLeftDoorPosition.To = Canvas.GetTop(rectLiftDoorLeft) + 40;
-                daRightDoorPosition.From = Canvas.GetTop(rectLiftDoorRight);
-                daRightDoorPosition.To = Canvas.GetTop(rectLiftDoorRight) + 40;
-            }
-            bIsOpened = !bIsOpened;
-            Storyboard.SetTarget(daLeftDoorPosition, rectLiftDoorLeft);
-            Storyboard.SetTargetProperty(daLeftDoorPosition, new PropertyPath("(Canvas.Top)"));
-            Storyboard.SetTarget(daRightDoorPosition, rectLiftDoorRight);
-            Storyboard.SetTargetProperty(daRightDoorPosition, new PropertyPath("(Canvas.Top)"));
-            sbLiftMovement.Completed += vAnimationCompleted;
-            sbLiftMovement.Begin();
-        }
-        public void vOpenCloseLiftDoorAnimation()
-        {
-            Storyboard sbDoorOpening = new Storyboard();
-            sbDoorOpening.Duration = new Duration(TimeSpan.FromSeconds(3));
-
-            DoubleAnimation daLeftDoorWidth = new DoubleAnimation();
-            DoubleAnimation daRightDoorWidth = new DoubleAnimation();
-            DoubleAnimation daRightDoorPosition = new DoubleAnimation();
-            daLeftDoorWidth.Duration = sbDoorOpening.Duration;
-            daRightDoorWidth.Duration = sbDoorOpening.Duration;
-            daRightDoorPosition.Duration = sbDoorOpening.Duration;
-            sbDoorOpening.Children.Add(daLeftDoorWidth);
-            sbDoorOpening.Children.Add(daRightDoorWidth);
-            sbDoorOpening.Children.Add(daRightDoorPosition);
-            if (bIsOpened)
-            {
-                daLeftDoorWidth.From = 1;
-                daLeftDoorWidth.To = 10;
-                daRightDoorWidth.From = 1;
-                daRightDoorWidth.To = 10;
-                daRightDoorPosition.From = Canvas.GetLeft(rectLiftDoorRight);
-                daRightDoorPosition.To = Canvas.GetLeft(rectLiftDoorRight) - 9;
-            }
-            else
-            {
-                daLeftDoorWidth.From = 10;
-                daLeftDoorWidth.To = 1;
-                daRightDoorWidth.From = 10;
-                daRightDoorWidth.To = 1;
-                daRightDoorPosition.From = Canvas.GetLeft(rectLiftDoorRight);
-                daRightDoorPosition.To = Canvas.GetLeft(rectLiftDoorRight) + 9;
-            }
-            bIsOpened = !bIsOpened;
-            Storyboard.SetTarget(daLeftDoorWidth, rectLiftDoorLeft);
-            Storyboard.SetTargetProperty(daLeftDoorWidth, new PropertyPath("Width"));
-            Storyboard.SetTarget(daRightDoorWidth, rectLiftDoorRight);
-            Storyboard.SetTargetProperty(daRightDoorWidth, new PropertyPath("Width"));
-            Storyboard.SetTarget(daRightDoorPosition, rectLiftDoorRight);
-            Storyboard.SetTargetProperty(daRightDoorPosition, new PropertyPath("(Canvas.Left)"));
-            sbDoorOpening.Completed += vAnimationCompleted;
-            sbDoorOpening.Begin();
-        }
+        
         void vCalculatingMaxNumberOfPeople(int iMaxWeight, int iWeightOfPerson)
         {
             iMaxNumberOfPeopleInside=iMaxWeight/iWeightOfPerson;
