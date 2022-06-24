@@ -42,11 +42,14 @@ namespace LiftSimulator
         private void vCreateNewBuilding()
         {
             Building.lFloors.Clear();
+            Building.lLifts.Clear();
             Building.vAddFloorsToBulding(CurrentSettings.iNumberOfFloors);
             spFloors.Children.Clear();
             spLiftButtons1.Children.Clear();
             spLiftButtons2.Children.Clear();
+            lbtnLiftButton.Clear();
             canBuilding.Children.Clear();
+
             for (int i = 0; i < CurrentSettings.iNumberOfFloors; i++)
             {
                 lbtnLiftButton.Add(new Button());
@@ -104,11 +107,13 @@ namespace LiftSimulator
         {
             if(sender is Button)
             {
+                if (Convert.ToInt32((sender as Button).Content) == iChosenFloor)
+                    return;
                 Building.lFloors[iChosenFloor].vAddPassengerToTheFloor(iChosenFloor, Convert.ToInt32((sender as Button).Content), CurrentSettings.iNumberOfFloors);
                 canBuilding.Children.Add(Building.lFloors[iChosenFloor].lPassengersOnTheFloor[Building.lFloors[iChosenFloor].lPassengersOnTheFloor.Count-1].imgPassenger);
                 canBuilding.Children.Add(Building.lFloors[iChosenFloor].lPassengersOnTheFloor[Building.lFloors[iChosenFloor].lPassengersOnTheFloor.Count - 1].tbTargetFloor);
             }
-            Building.vMoveLiftUpDownAnimationCompleted(sender, e);
+            Building.vMoveLiftUpDownAnimationCompleted(null, null);
         }
         
     }
