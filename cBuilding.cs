@@ -112,7 +112,9 @@ namespace LiftSimulator
         int iNumberOfLifts=1;
         public int iNumberOfFloors;
         int iTime = 0;
-        public int stuckInAnimation = 0; 
+        public int stuckInAnimation = 0;
+        public int iTheHighestFloorWithPassenger=0;
+        public int iTheLowestFloorWithPassenger=1000;
         public List<cFloor> lFloors = new List<cFloor>();
         public List<cLift> lLifts = new List<cLift>();
         public Canvas canBuilding = new Canvas();
@@ -125,6 +127,7 @@ namespace LiftSimulator
                 lFloors.Add(new cFloor() { iNumberOfFloor=i});
             }
             iNumberOfFloors=inewNumberOfFloors;
+            iTheLowestFloorWithPassenger=inewNumberOfFloors;
         }
         void vLiftTimerTick(object sender, EventArgs e)
         {
@@ -172,6 +175,14 @@ namespace LiftSimulator
         public void vAddPassengers(int iPresentFloor, int iTargettFloor, int iNumberOfFloors)
         {
             lFloors[iPresentFloor].vAddPassengerToTheFloor(iPresentFloor, iTargettFloor, iNumberOfFloors, canBuilding);
+            if (iPresentFloor > iTheHighestFloorWithPassenger)
+            {
+                iTheHighestFloorWithPassenger=iPresentFloor;
+            }
+            else if(iPresentFloor < iTheLowestFloorWithPassenger)
+            {
+                iTheLowestFloorWithPassenger=iPresentFloor;
+            }
         }
         public void vMoveLiftUpDownAnimationCompleted(object sender, EventArgs e)
         {
@@ -183,7 +194,16 @@ namespace LiftSimulator
             bool bIsAnyoneGoInTheLift = false;
             foreach (cPassenger p in lFloors[iNumberOfFloor].lPassengersOnTheFloor)
             {
-                if(lLifts[0].lPassengersInTheLift.Count==0 || p.bDirection==lLifts[0].lPassengersInTheLift[0].bDirection)
+                if (lLifts[0].lPassengersInTheLift.Count > 0)
+                {
+                    if (p.bDirection == lLifts[0].lPassengersInTheLift[0].bDirection)
+                {
+                    bIsAnyoneGoInTheLift = true;
+                    break;
+                }
+                }
+                
+                if ((lLifts[0].lPassengersInTheLift.Count == 0) && ((lLifts[0].iCurrentLevelOfTheLift==iTheHighestFloorWithPassenger)||(lLifts[0].iCurrentLevelOfTheLift==iTheLowestFloorWithPassenger)))
                 {
                     bIsAnyoneGoInTheLift = true;
                     break;
@@ -299,26 +319,48 @@ namespace LiftSimulator
 
         public  void vCalculatingTheNextFloor( int iNumberOfFloor, int iNumberOfLift=0)
         {
-            /*if (iNumberOfFloor == 0)
-            {
-                lLifts[iNumberOfLift].bCurrentDirection=true;
-            }
-            else if (iNumberOfFloor == iNumberOfFloors - 1)
-            {
-                lLifts[iNumberOfLift].bCurrentDirection =false;
-            }
-            /*else*/ if ((lLifts[iNumberOfLift].lPassengersInTheLift.Count == 0)&&(lFloors[iNumberOfFloor].lPassengersOnTheFloor.Count>0))
+            /*
+            if ((lLifts[iNumberOfLift].lPassengersInTheLift.Count == 0)&&(lFloors[iNumberOfFloor].lPassengersOnTheFloor.Count>0))
             {
                 if (lFloors[iNumberOfFloor].lPassengersOnTheFloor[0].bDirection)
                     lLifts[iNumberOfLift].iCurrentDirection = 1;
                 else
                     lLifts[iNumberOfLift].iCurrentDirection = -1;
             }
+            */
+            /*if ((lLifts[iNumberOfLift].iCurrentDirection == 1)&&(lLifts[iNumberOfLift].iCurrentLevelOfTheLift<iTheHighestFloorWithPassenger)
+                &&(lLifts[iNumberOfLift].iMaxNumberOfPeopleInside>lLifts[iNumberOfLift].iPresentNumberOfPeopleInside))
+            {
+                lLifts[iNumberOfLift].iCurrentDirection = 1;
+                iTheHighestFloorWithPassenger=0;
+            }*/
+            if ((lLifts[iNumberOfLift].lPassengersInTheLift.Count == 0)&&(lFloors[iNumberOfFloor].lPassengersOnTheFloor.Count>0))
+            {
+                if ((lFloors[iNumberOfFloor].lPassengersOnTheFloor[0].bDirection== false) && (lLifts[iNumberOfLift].iCurrentLevelOfTheLift >= iTheHighestFloorWithPassenger))
+                {
+                    lLifts[iNumberOfLift].iCurrentDirection = -1;
+                    iTheHighestFloorWithPassenger=0;
+                }
+                else if(lFloors[iNumberOfFloor].lPassengersOnTheFloor[0].bDirection== false)
+                {
+                    lLifts[iNumberOfLift].iCurrentDirection = 1;
+                }
+                else if((lFloors[iNumberOfFloor].lPassengersOnTheFloor[0].bDirection== true) && (lLifts[iNumberOfLift].iCurrentLevelOfTheLift <= iTheLowestFloorWithPassenger))
+                {
+                    lLifts[iNumberOfLift].iCurrentDirection = 1;
+                    iTheLowestFloorWithPassenger=iNumberOfFloors;
+                }
+                else if(lFloors[iNumberOfFloor].lPassengersOnTheFloor[0].bDirection== true)
+                {
+                    lLifts[iNumberOfLift].iCurrentDirection = -1;
+                }
+
+            }
             else if(lLifts[iNumberOfLift].lPassengersInTheLift.Count > 0)
             {
                 return;
             }
-            else
+            else //it is not neccessary now
             {
                 
                 int iNextDirectionUp = 0;
@@ -362,12 +404,12 @@ namespace LiftSimulator
     }
     class cLift
     {
-        int iPresentNumberOfPeopleInside=0;
+        public int iPresentNumberOfPeopleInside=0;
         int iHumanWeight = 0;
         public int iMaxNumberOfPeopleInside=100;
         int iMaxMass = 0;
         public int iCurrentLevelOfTheLift=0;
-        public int iCurrentDirection = 0; //0-down, 1-up
+        public int iCurrentDirection = 0; //"-1"->down, "1"->up, "0"->wait
         public bool bIsOpened = false;
         public bool bAnimationInProgress = false;
         public Rectangle rectLiftDoorRight = new Rectangle();
@@ -413,13 +455,6 @@ namespace LiftSimulator
         {
             iMaxNumberOfPeopleInside=iMaxWeight/iHumanWeight;
         }
-
-       /* void vFullElevatorMovement(List<cPassenger> lPassengersOnTheFloor, int iNumberOfFloor, int iNumberOfFloors)
-        {
-            vRemovePassengersFromTheLift(lPassengersOnTheFloor, iNumberOfFloor);
-            vCalculatingTheNextFloor(lPassengersOnTheFloor, iNumberOfFloor, iNumberOfFloors);
-            vAddPassengersToTheLift(lPassengersOnTheFloor);
-        }*/
        
         public void vAddPassengersToTheLift(List<cPassenger> lPassengersOnTheFloor)
         {
@@ -464,8 +499,6 @@ namespace LiftSimulator
 
                 if (lPassengersInTheLift[iCheckingPerson].iTargetFloor == iNumberOfFloor)
                 {
-
-                    //lPassengersOnTheFloor.Add((sPassenger)lPassengersInTheLift[iCheckingPerson]);
                     lPassengersInTheLift[iCheckingPerson].state = ePassengerState.Leaving;
                     lPassengersLeavingTheLift.Add(lPassengersInTheLift[iCheckingPerson]);
                     lPassengersInTheLift.RemoveAt(iCheckingPerson);
