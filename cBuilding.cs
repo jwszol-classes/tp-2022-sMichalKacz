@@ -9,6 +9,7 @@ using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 namespace LiftSimulator
 {
@@ -21,16 +22,25 @@ namespace LiftSimulator
         public bool bAnimationInProgress = false;
         public Image imgPassenger = new Image();
         public TextBlock tbTargetFloor = new TextBlock();
-        public cPassenger(int iTopPosition, int iLeftPosition, int iTargetFloor)
+        Canvas canOwnerCanvas;
+        public cPassenger(int iTopPosition, int iLeftPosition, int iTargetFloor, Canvas can)
         {
             tbTargetFloor.Visibility = Visibility.Hidden;
-            imgPassenger.Source = new BitmapImage(new Uri("pack://application:,,,/Graphics/BlankPassenger.png", UriKind.Absolute));
+            imgPassenger.Source = new BitmapImage(new Uri("pack://application:,,,/Graphics/Passenger.png", UriKind.Absolute));
             imgPassenger.Height = 30;
             imgPassenger.MouseEnter += imgPassengerMouseOver;
             imgPassenger.MouseLeave += imgPassengerMouseLeave;
             imgPassenger.Tag =iTargetFloor;
             Canvas.SetTop(imgPassenger, iTopPosition);
             Canvas.SetLeft(imgPassenger, iLeftPosition);
+            canOwnerCanvas = can;
+            canOwnerCanvas.Children.Add(imgPassenger);
+            canOwnerCanvas.Children.Add(tbTargetFloor);
+        }
+        void vRemovePassenger()
+        {
+            canOwnerCanvas.Children.Remove(imgPassenger);
+            canOwnerCanvas.Children.Remove(tbTargetFloor);
         }
         private void imgPassengerMouseOver(object sender, RoutedEventArgs e)
         {
@@ -45,17 +55,27 @@ namespace LiftSimulator
         }
         void vAnimationCompleted(object sender, EventArgs e)
         {
+            if(iPresentFloor==iTargetFloor)
+            {
+                vRemovePassenger();
+            }
             bAnimationInProgress = false;
+            if(Canvas.GetLeft(imgPassenger)<255)
+            {
+                return;
+            }
             Canvas.SetLeft(imgPassenger, 500+ 20*iPositionInLift);
             Canvas.SetTop(imgPassenger, 100);
             imgPassenger.Height = 60;
+            iPresentFloor = iTargetFloor;
             return;
         }
-        public void vMovePassengerAnimation(int iTargetPosition)
+        public void vMovePassengerAnimation(int iTargetPosition, bool bToLift = true)
         {   
 
             bAnimationInProgress = true;
             Storyboard sbPassengerMovement = new Storyboard();
+            double a = Canvas.GetLeft(imgPassenger);
             sbPassengerMovement.Duration = new Duration(TimeSpan.FromSeconds((iTargetPosition - Canvas.GetLeft(imgPassenger))/ 25));
 
             DoubleAnimation daPassengerPosition = new DoubleAnimation();
@@ -67,7 +87,10 @@ namespace LiftSimulator
 
             Storyboard.SetTarget(daPassengerPosition, imgPassenger);
             Storyboard.SetTargetProperty(daPassengerPosition, new PropertyPath("(Canvas.Left)"));
-            sbPassengerMovement.FillBehavior = FillBehavior.Stop;
+            if (bToLift)
+                sbPassengerMovement.FillBehavior = FillBehavior.Stop;
+            else
+                sbPassengerMovement.FillBehavior = FillBehavior.HoldEnd;
             sbPassengerMovement.Completed += vAnimationCompleted;
             sbPassengerMovement.Begin();
         }
@@ -77,6 +100,7 @@ namespace LiftSimulator
     {
         int iNumberOfLifts=1;
         public int iNumberOfFloors;
+        public int stuckInAnimation = 0; 
         public List<cFloor> lFloors = new List<cFloor>();
         public List<cLift> lLifts = new List<cLift>();
         public Canvas canBuilding = new Canvas();
@@ -90,10 +114,27 @@ namespace LiftSimulator
             }
             iNumberOfFloors=inewNumberOfFloors;
         }
-
-        public void vAddLiftsToBulding()
+        void vLiftTimerTick(object sender, EventArgs e)
         {
-            lLifts.Add(new cLift(lFloors.Count));
+            if (lLifts[0].bAnimationInProgress)
+                return;
+            foreach (cPassenger p in lLifts[0].lPassengersInTheLift)
+            {
+                if (p.bAnimationInProgress)
+                    return;
+            }
+            if (lLifts[0].bIsOpened)
+                vOpenCloseLiftDoorAnimation();
+            else
+                vMoveLiftUpDownAnimationCompleted(null, null);
+        }
+        public void vAddLiftsToBulding(cSettings s)
+        {
+            DispatcherTimer dtLiftTimer = new DispatcherTimer();
+            dtLiftTimer.Interval = new TimeSpan(0, 0, 1);
+            dtLiftTimer.Tick += vLiftTimerTick;
+            dtLiftTimer.Start();
+            lLifts.Add(new cLift(s));
             foreach (cLift l in lLifts)
             {
                 canBuilding.Children.Add(l.rectLiftDoorLeft);
@@ -101,11 +142,12 @@ namespace LiftSimulator
                 canBuilding.Children.Add(l.rectLiftInside);
             }
         }
-
+        public void vAddPassengers(int iPresentFloor, int iTargettFloor, int iNumberOfFloors)
+        {
+            lFloors[iPresentFloor].vAddPassengerToTheFloor(iPresentFloor, iTargettFloor, iNumberOfFloors, canBuilding);
+        }
         public void vMoveLiftUpDownAnimationCompleted(object sender, EventArgs e)
         {
-            if (lLifts[0].bAnimationInProgress && sender == null)
-                return;
             lLifts[0].bAnimationInProgress = false;
             int iNumberOfFloor = lLifts[0].iCurrentLevelOfTheLift;
             //lLifts[0].vRemovePassengersFromTheLift(lFloors[iNumberOfFloor].lPassengersOnTheFloor, iNumberOfFloor);
@@ -113,7 +155,7 @@ namespace LiftSimulator
             bIsAnyoneGoOutFromTheLift=lLifts[0].vCheckingThatIsAnyoneGoOutFromTheLift(lLifts[0].lPassengersInTheLift, iNumberOfFloor);//?
             
 
-            if((lFloors[iNumberOfFloor].lPassengersOnTheFloor.Count>0)||(bIsAnyoneGoOutFromTheLift==true))
+            if((lFloors[iNumberOfFloor].lPassengersOnTheFloor.Count>0&& lLifts[0].lPassengersInTheLift.Count < lLifts[0].iMaxNumberOfPeopleInside)||(bIsAnyoneGoOutFromTheLift==true))
             {
                 vOpenCloseLiftDoorAnimation();
             }
@@ -125,7 +167,6 @@ namespace LiftSimulator
             
             return;
         }
-
         void vOpenCloseLiftDoorAnimationCompleted(object sender, EventArgs e)
         {
             lLifts[0].bAnimationInProgress = false;
@@ -136,16 +177,7 @@ namespace LiftSimulator
             lLifts[0].vRemovePassengersFromTheLift(lLifts[0].lPassengersInTheLift, iNumberOfFloor);
                 vCalculatingTheNextFloor(iNumberOfFloor);
             lLifts[0].vAddPassengersToTheLift(lFloors[iNumberOfFloor].lPassengersOnTheFloor);
-                foreach (cPassenger p in lLifts[0].lPassengersInTheLift)
-                {
-                    if (p.bAnimationInProgress)
-                    {
-                        vWait();
-                        return;
-                    }
-                }
-                vOpenCloseLiftDoorAnimation();
-                
+                return;
             }
             else
             {
@@ -160,6 +192,7 @@ namespace LiftSimulator
 
         public void vMoveLiftUpDownAnimation()
         {
+            stuckInAnimation = 1;
             lLifts[0].iCurrentLevelOfTheLift = lLifts[0].iCurrentLevelOfTheLift + lLifts[0].iCurrentDirection;
             lLifts[0].bAnimationInProgress = true;
             Storyboard sbLiftMovement = new Storyboard();
@@ -182,15 +215,10 @@ namespace LiftSimulator
             sbLiftMovement.Completed += vMoveLiftUpDownAnimationCompleted;
             sbLiftMovement.Begin();
         }
-        public void vWait(double dTime = 0.5)
-        {
-            Storyboard sbWait = new Storyboard();
-            sbWait.Duration = new Duration(TimeSpan.FromSeconds(dTime));
-            sbWait.Completed += vOpenCloseLiftDoorAnimationCompleted;
-            sbWait.Begin();
-        }
+
         public void vOpenCloseLiftDoorAnimation()
         {
+            stuckInAnimation = 3;
             lLifts[0].bAnimationInProgress = true;
             Storyboard sbDoorOpening = new Storyboard();
             sbDoorOpening.Duration = new Duration(TimeSpan.FromSeconds(3));
@@ -288,18 +316,18 @@ namespace LiftSimulator
         public Rectangle rectFloor = new Rectangle();
         public List<cPassenger> lPassengersOnTheFloor = new List<cPassenger>();
 
-        public void vAddPassengerToTheFloor(int iPresentFloor, int iTargettFloor, int iNumberOfFloors)
+        public void vAddPassengerToTheFloor(int iPresentFloor, int iTargettFloor, int iNumberOfFloors, Canvas can)
         {
            bool bDirectonCalc;
            if(iPresentFloor < iTargettFloor)bDirectonCalc = true;
            else bDirectonCalc = false;
-           lPassengersOnTheFloor.Add(new cPassenger((iNumberOfFloors - iNumberOfFloor - 1) * 40 - 10, 230 - 10 * lPassengersOnTheFloor.Count, iTargettFloor) { iPresentFloor=iPresentFloor, iTargetFloor=iTargettFloor , bDirection=bDirectonCalc});
+           lPassengersOnTheFloor.Add(new cPassenger((iNumberOfFloors - iNumberOfFloor - 1) * 40 - 10, 230 - 10 * lPassengersOnTheFloor.Count, iTargettFloor, can) { iPresentFloor=iPresentFloor, iTargetFloor=iTargettFloor , bDirection=bDirectonCalc});
         }
     }
     class cLift
     {
         int iPresentNumberOfPeopleInside=0;
-        int iMaxNumberOfPeopleInside=100;
+        public int iMaxNumberOfPeopleInside=100;
         public int iCurrentLevelOfTheLift=0;
         public int iCurrentDirection = 0; //0-down, 1-up
         public bool bIsOpened = false;
@@ -309,18 +337,19 @@ namespace LiftSimulator
         public Rectangle rectLiftInside = new Rectangle();
 
         public List<cPassenger> lPassengersInTheLift = new List<cPassenger>();
-        public cLift(int iNumberOfFloors)
+        public cLift(cSettings s)
         {
+            vCalculatingMaxNumberOfPeople(s.iLiftWeightLimit, s.iHumanWeight);
             rectLiftDoorRight.Width = 10;
             rectLiftDoorRight.Height = 30;
             rectLiftDoorRight.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF555555"));
-            Canvas.SetTop(rectLiftDoorRight, 40 * iNumberOfFloors - 45);
+            Canvas.SetTop(rectLiftDoorRight, 40 * s.iNumberOfFloors - 45);
             Canvas.SetLeft(rectLiftDoorRight, 270);
 
             rectLiftDoorLeft.Width = 10;
             rectLiftDoorLeft.Height = 30;
             rectLiftDoorLeft.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF555555"));
-            Canvas.SetTop(rectLiftDoorLeft, 40 * iNumberOfFloors - 45);
+            Canvas.SetTop(rectLiftDoorLeft, 40 * s.iNumberOfFloors - 45);
             Canvas.SetLeft(rectLiftDoorLeft, 260);
 
             rectLiftInside.Width = 600;
@@ -330,10 +359,6 @@ namespace LiftSimulator
             rectLiftInside.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
             Canvas.SetTop(rectLiftInside, 40);
             Canvas.SetLeft(rectLiftInside, 430);
-        }
-        cLift(cSettings s)
-        {
-            vCalculatingMaxNumberOfPeople(s.iLiftWeightLimit, s.iHumanWeight);
         }
         void vCalculatingMaxNumberOfPeople(int iMaxWeight, int iWeightOfPerson)
         {
@@ -349,10 +374,10 @@ namespace LiftSimulator
        
         public void vAddPassengersToTheLift(List<cPassenger> lPassengersOnTheFloor)
         {
-           
-                int iCheckingPerson=0;
-                while ((iMaxNumberOfPeopleInside - iPresentNumberOfPeopleInside>0) && (lPassengersOnTheFloor.Count>iCheckingPerson))
-                {
+
+            int iCheckingPerson = 0;
+            while ((iMaxNumberOfPeopleInside - iPresentNumberOfPeopleInside - 1 >= 0) && (lPassengersOnTheFloor.Count > iCheckingPerson))
+            {
 
                 if (lPassengersOnTheFloor[iCheckingPerson].bDirection == (iCurrentDirection > 0))
                 /* if (((lPassengersOnTheFloor[iCheckingPerson].iTargetFloor-iCurrentLevelOfTheLift>0)&&(bCurrentDirection==true))||
@@ -367,9 +392,16 @@ namespace LiftSimulator
                 }
                 else
                 {
-                    iCheckingPerson=iCheckingPerson+1;
+                    iCheckingPerson = iCheckingPerson + 1;
                 }
-                }
+            }
+            int iIndex = 0;
+            foreach (cPassenger p in lPassengersOnTheFloor)
+            {
+                if(Canvas.GetLeft(p.imgPassenger)<230 && !p.bAnimationInProgress)
+                    p.vMovePassengerAnimation(230 - 10 * iIndex, false);
+                iIndex++;
+            }
                 
         }
 
@@ -378,14 +410,18 @@ namespace LiftSimulator
             int iCheckingPerson=0;
                 while ((iPresentNumberOfPeopleInside>iCheckingPerson))
                 {
-                   
-                if (lPassengersInTheLift[iCheckingPerson].iTargetFloor==iNumberOfFloor)
-                    {
-                        
-                        //lPassengersOnTheFloor.Add((sPassenger)lPassengersInTheLift[iCheckingPerson]);
-                        lPassengersInTheLift.RemoveAt(iCheckingPerson);
-                        iPresentNumberOfPeopleInside=iPresentNumberOfPeopleInside-1;
-                    }
+
+                if (lPassengersInTheLift[iCheckingPerson].iTargetFloor == iNumberOfFloor)
+                {
+
+                    //lPassengersOnTheFloor.Add((sPassenger)lPassengersInTheLift[iCheckingPerson]);
+                    Canvas.SetTop(lPassengersInTheLift[iCheckingPerson].imgPassenger, Canvas.GetTop(rectLiftDoorRight) - 5);
+                    Canvas.SetLeft(lPassengersInTheLift[iCheckingPerson].imgPassenger, 260);
+                    lPassengersInTheLift[iCheckingPerson].imgPassenger.Height = 30;
+                    lPassengersInTheLift[iCheckingPerson].vMovePassengerAnimation(400);
+                    lPassengersInTheLift.RemoveAt(iCheckingPerson);
+                    iPresentNumberOfPeopleInside = iPresentNumberOfPeopleInside - 1;
+                }
                 else
                 {
                     iCheckingPerson=iCheckingPerson+1;

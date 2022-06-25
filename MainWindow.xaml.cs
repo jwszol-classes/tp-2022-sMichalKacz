@@ -41,6 +41,7 @@ namespace LiftSimulator
         }
         private void vCreateNewBuilding()
         {
+            iChosenFloor = 0;
             if(Building!=null)
             {
                 gMainGrid.Children.Remove(Building.canBuilding);
@@ -90,7 +91,7 @@ namespace LiftSimulator
                 iIndex++;
             }
             iIndex = 0;
-            Building.vAddLiftsToBulding();            
+            Building.vAddLiftsToBulding(CurrentSettings);            
         }
         private void rbtnChooseFloorClick(object sender, RoutedEventArgs e)
         {
@@ -105,12 +106,13 @@ namespace LiftSimulator
             {
                 if (Convert.ToInt32((sender as Button).Content) == iChosenFloor)
                     return;
-                Building.lFloors[iChosenFloor].vAddPassengerToTheFloor(iChosenFloor, Convert.ToInt32((sender as Button).Content), CurrentSettings.iNumberOfFloors);
-                Building.canBuilding.Children.Add(Building.lFloors[iChosenFloor].lPassengersOnTheFloor[Building.lFloors[iChosenFloor].lPassengersOnTheFloor.Count-1].imgPassenger);
-                Building.canBuilding.Children.Add(Building.lFloors[iChosenFloor].lPassengersOnTheFloor[Building.lFloors[iChosenFloor].lPassengersOnTheFloor.Count - 1].tbTargetFloor);
+                Building.vAddPassengers(iChosenFloor, Convert.ToInt32((sender as Button).Content), CurrentSettings.iNumberOfFloors);
+                
             }
-            Building.vMoveLiftUpDownAnimationCompleted(null, null);
         }
-        
+
+        private void DebugButton_Click(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }

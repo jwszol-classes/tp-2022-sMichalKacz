@@ -103,9 +103,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Resource Include="Graphics\BlankPassenger.png" />
+    <Resource Include="Graphics\gear.png" />
+    <Resource Include="Graphics\passenger.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
