@@ -26,7 +26,6 @@
         <Button x:Name="btnSettings" Grid.Row="0" Grid.Column="3" Style="{StaticResource SettingsButtonStyle}" Click="btnSettings_Click">
             <Image Source="Graphics/gear.png"/>
         </Button>
-        <Button x:Name="DebugButton" Grid.Row="0" Grid.Column="0" Click="DebugButton_Click" Visibility="Hidden"/>
         <Rectangle Name="rectDarkWindow" Grid.ColumnSpan="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=ColumnDefinitions.Count, Mode=OneWay}" Grid.RowSpan="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=RowDefinitions.Count, Mode=OneWay}" Visibility="Collapsed" Fill="DarkGray" Opacity="0.4"/>
     </Grid>
 </Window>

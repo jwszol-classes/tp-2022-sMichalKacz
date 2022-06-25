@@ -91,7 +91,8 @@ namespace LiftSimulator
                 iIndex++;
             }
             iIndex = 0;
-            Building.vAddLiftsToBulding(CurrentSettings);            
+            Building.vAddLiftsToBulding(CurrentSettings);
+            rbtnChooseFloorClick(null, null);
         }
         private void rbtnChooseFloorClick(object sender, RoutedEventArgs e)
         {
@@ -99,6 +100,11 @@ namespace LiftSimulator
             {
                 iChosenFloor = Convert.ToInt32((sender as RadioButton).Content);
             }
+            foreach (Button b in lbtnLiftButton)
+            {
+                b.Style = Application.Current.FindResource("LiftButtonStyle") as Style;
+            }
+            lbtnLiftButton[iChosenFloor].Style= Application.Current.FindResource("DisabledLiftButtonStyle") as Style;
         }
         private void btnFloorLiftClick(object sender, RoutedEventArgs e)
         {
@@ -109,10 +115,6 @@ namespace LiftSimulator
                 Building.vAddPassengers(iChosenFloor, Convert.ToInt32((sender as Button).Content), CurrentSettings.iNumberOfFloors);
                 
             }
-        }
-
-        private void DebugButton_Click(object sender, RoutedEventArgs e)
-        {
         }
     }
 }
