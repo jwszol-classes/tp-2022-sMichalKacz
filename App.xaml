@@ -11,14 +11,53 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <!--Buttons-->
+        <Style TargetType="Button" x:Key="DisabledLiftButtonStyle">
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Background" Value="#FFFF6666"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="20" />
+                                    <Setter Property="BorderBrush" Value="#FFFF0000"/>
+                                    <Setter Property="BorderThickness" Value="3"/>
+                                </Style>
+                            </Border.Style>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+        </Style>
         <Style TargetType="Button" x:Key="LiftButtonStyle">
             <Setter Property="Width" Value="40"/>
             <Setter Property="Height" Value="40"/>
-            <Style.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="20" />
-                </Style>
-            </Style.Resources>
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="20" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="BorderThickness" Value="3"/>
+                                            <Setter Property="BorderBrush" Value="Green"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            
         </Style>
         <Style TargetType="Button" x:Key="SettingsButtonStyle">
             <Setter Property="Width" Value="30"/>
