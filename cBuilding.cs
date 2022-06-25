@@ -149,9 +149,11 @@ namespace LiftSimulator
                 if(iTime==5)
                 {
                     lLifts[0].iCurrentDirection = -lLifts[0].iCurrentLevelOfTheLift;
+                    lLifts[0].imgLiftDirection.Source = new BitmapImage(new Uri("pack://application:,,,/Graphics/DirectionDown.png", UriKind.Absolute));
                     vMoveLiftUpDownAnimation();
                 }
-                vMoveLiftUpDownAnimationCompleted(null, null);
+                else
+                    vMoveLiftUpDownAnimationCompleted(null, null);
             }
         }
         public void vAddLiftsToBulding(cSettings s)
@@ -167,6 +169,7 @@ namespace LiftSimulator
                 canBuilding.Children.Add(l.rectLiftDoorRight);
                 canBuilding.Children.Add(l.rectLiftInside);
                 canBuilding.Children.Add(l.tbMassOfPeopleInside);
+                canBuilding.Children.Add(l.imgLiftDirection);
             }
         }
         public void vAddPassengers(int iPresentFloor, int iTargettFloor, int iNumberOfFloors)
@@ -351,6 +354,12 @@ namespace LiftSimulator
                 }
                 lLifts[iNumberOfLift].iCurrentDirection = iNextDirectionUp;
             }
+            if(lLifts[0].iCurrentDirection<0)
+                lLifts[iNumberOfLift].imgLiftDirection.Source = new BitmapImage(new Uri("pack://application:,,,/Graphics/DirectionDown.png", UriKind.Absolute));
+            else if(lLifts[0].iCurrentDirection > 0)
+                lLifts[iNumberOfLift].imgLiftDirection.Source = new BitmapImage(new Uri("pack://application:,,,/Graphics/DirectionUp.png", UriKind.Absolute));
+            else
+                lLifts[iNumberOfLift].imgLiftDirection.Source = new BitmapImage(new Uri("pack://application:,,,/Graphics/Direction0.png", UriKind.Absolute));
         }
     }
     class cFloor
@@ -382,6 +391,7 @@ namespace LiftSimulator
         public Rectangle rectLiftDoorLeft = new Rectangle();
         public Rectangle rectLiftInside = new Rectangle();
         public TextBlock tbMassOfPeopleInside = new TextBlock();
+        public Image imgLiftDirection = new Image();
 
         public List<cPassenger> lPassengersInTheLift = new List<cPassenger>();
         public List<cPassenger> lPassengersLeavingTheLift = new List<cPassenger>();
@@ -416,6 +426,11 @@ namespace LiftSimulator
             tbMassOfPeopleInside.FontSize = 20;
             Canvas.SetTop(tbMassOfPeopleInside, 10);
             Canvas.SetLeft(tbMassOfPeopleInside, 430);
+
+            imgLiftDirection.Source = new BitmapImage(new Uri("pack://application:,,,/Graphics/Direction0.png", UriKind.Absolute));
+            imgLiftDirection.Height = 50;
+            Canvas.SetTop(imgLiftDirection, 120);
+            Canvas.SetLeft(imgLiftDirection, 440);
         }
         void vCalculatingMaxNumberOfPeople(int iMaxWeight)
         {

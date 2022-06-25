@@ -107,5 +107,10 @@
     <Resource Include="Graphics\gear.png" />
     <Resource Include="Graphics\passenger.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Direction0.png" />
+    <Resource Include="Graphics\DirectionDown.png" />
+    <Resource Include="Graphics\DirectionUp.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
