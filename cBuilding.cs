@@ -110,6 +110,7 @@ namespace LiftSimulator
     {
         int iNumberOfLifts=1;
         public int iNumberOfFloors;
+        int iTime = 0;
         public int stuckInAnimation = 0; 
         public List<cFloor> lFloors = new List<cFloor>();
         public List<cLift> lLifts = new List<cLift>();
@@ -127,16 +128,30 @@ namespace LiftSimulator
         void vLiftTimerTick(object sender, EventArgs e)
         {
             if (lLifts[0].bAnimationInProgress || lLifts[0].lPassengersLeavingTheLift.Count > 0)
+            {
+                iTime = 0;
                 return;
+            }
             foreach (cPassenger p in lLifts[0].lPassengersInTheLift)
             {
                 if (p.bAnimationInProgress)
+                {
+                    iTime = 0;
                     return;
+                }
             }
             if (lLifts[0].bIsOpened)
                 vOpenCloseLiftDoorAnimation();
             else
+            {
+                iTime++;
+                if(iTime==5)
+                {
+                    lLifts[0].iCurrentDirection = -lLifts[0].iCurrentLevelOfTheLift;
+                    vMoveLiftUpDownAnimation();
+                }
                 vMoveLiftUpDownAnimationCompleted(null, null);
+            }
         }
         public void vAddLiftsToBulding(cSettings s)
         {
@@ -342,6 +357,7 @@ namespace LiftSimulator
         int iPresentNumberOfPeopleInside=0;
         int iHumanWeight = 0;
         public int iMaxNumberOfPeopleInside=100;
+        int iMaxMass = 0;
         public int iCurrentLevelOfTheLift=0;
         public int iCurrentDirection = 0; //0-down, 1-up
         public bool bIsOpened = false;
@@ -356,8 +372,9 @@ namespace LiftSimulator
         public cLift(cSettings s)
         {
             iHumanWeight = s.iHumanWeight;
+            iMaxMass = s.iLiftWeightLimit;
             vCalculatingMaxNumberOfPeople(s.iLiftWeightLimit);
-            tbMassOfPeopleInside.Text = "0 / " + (iMaxNumberOfPeopleInside * iHumanWeight).ToString() + " kg";
+            tbMassOfPeopleInside.Text = "0 / " + (iMaxMass).ToString() + " kg";
             rectLiftDoorRight.Width = 10;
             rectLiftDoorRight.Height = 30;
             rectLiftDoorRight.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF555555"));
@@ -428,7 +445,7 @@ namespace LiftSimulator
                     p.vMovePassengerAnimation(230 - 10 * iIndex);
                 iIndex++;
             }
-            tbMassOfPeopleInside.Text = (lPassengersInTheLift.Count * iHumanWeight).ToString() + " / " + (iMaxNumberOfPeopleInside*iHumanWeight).ToString() + " kg";
+            tbMassOfPeopleInside.Text = (lPassengersInTheLift.Count * iHumanWeight).ToString() + " / " + (iMaxMass).ToString() + " kg";
         }
 
         public void vRemovePassengersFromTheLift(int iNumberOfFloor)
@@ -462,7 +479,7 @@ namespace LiftSimulator
             dtLeavingPassengersTimer.Interval = new TimeSpan(0, 0, 0, 0,  300);
             dtLeavingPassengersTimer.Tick += vLeavingPassengersTick;
             dtLeavingPassengersTimer.Start();
-            tbMassOfPeopleInside.Text = (lPassengersInTheLift.Count * iHumanWeight).ToString() + " / " + (iMaxNumberOfPeopleInside * iHumanWeight).ToString() + " kg";
+            tbMassOfPeopleInside.Text = (lPassengersInTheLift.Count * iHumanWeight).ToString() + " / " + (iMaxMass).ToString() + " kg";
         }
         void vLeavingPassengersTick(object sender, EventArgs e)
         {
