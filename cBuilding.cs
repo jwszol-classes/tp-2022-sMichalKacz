@@ -53,8 +53,9 @@ namespace LiftSimulator
         {
             tbTargetFloor.Visibility = Visibility.Visible;
             tbTargetFloor.Text = (sender as Image).Tag.ToString();
-            Canvas.SetTop(tbTargetFloor, 0);
-            Canvas.SetLeft(tbTargetFloor, 0);
+            tbTargetFloor.FontSize = imgPassenger.Height / 3;
+            Canvas.SetTop(tbTargetFloor, Canvas.GetTop(imgPassenger) - imgPassenger.Height / 3);
+            Canvas.SetLeft(tbTargetFloor, Canvas.GetLeft(imgPassenger));
         }
         private void imgPassengerMouseLeave(object sender, RoutedEventArgs e)
         {
