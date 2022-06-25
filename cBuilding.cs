@@ -179,9 +179,16 @@ namespace LiftSimulator
             //lLifts[0].vRemovePassengersFromTheLift(lFloors[iNumberOfFloor].lPassengersOnTheFloor, iNumberOfFloor);
             bool bIsAnyoneGoOutFromTheLift;
             bIsAnyoneGoOutFromTheLift=lLifts[0].vCheckingThatIsAnyoneGoOutFromTheLift(lLifts[0].lPassengersInTheLift, iNumberOfFloor);//?
-            
-
-            if((lFloors[iNumberOfFloor].lPassengersOnTheFloor.Count>0&& lLifts[0].lPassengersInTheLift.Count < lLifts[0].iMaxNumberOfPeopleInside)||(bIsAnyoneGoOutFromTheLift==true))
+            bool bIsAnyoneGoInTheLift = false;
+            foreach (cPassenger p in lFloors[iNumberOfFloor].lPassengersOnTheFloor)
+            {
+                if(lLifts[0].lPassengersInTheLift.Count==0 || p.bDirection==lLifts[0].lPassengersInTheLift[0].bDirection)
+                {
+                    bIsAnyoneGoInTheLift = true;
+                    break;
+                }
+            }
+            if((bIsAnyoneGoInTheLift && lLifts[0].lPassengersInTheLift.Count < lLifts[0].iMaxNumberOfPeopleInside)||(bIsAnyoneGoOutFromTheLift==true))
             {
                 vOpenCloseLiftDoorAnimation();
             }
