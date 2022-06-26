@@ -24,7 +24,7 @@
 Purpose of alghorithm is to carry passengers in as few passes as possible. Lift everytime moves only one floor and check:
 1. *is anyone go out of the elevator?*
 2. *is anyone would like to go to the lift (it is true if only there is enough place in the lift and the directions of lift and passenger are the same)?*
->here algorith also check case that if in lift is nobody and in the highest or lowest floor is passenger with diiferent direction, lift will stopped and direction of lift would change to direction of the passenger 
+>here algorithm also check case that if in lift is nobody and in the highest or lowest floor is passenger with diiferent direction, lift will stopped and direction of lift would change to direction of the passenger 
 3. *if at least one of anwsers for previous questions is positive lift will stopped on this floor. Else lift will push on.*
 * animations of opening and closing doors in the lift 
 * animations of lift vertical driving
@@ -37,7 +37,7 @@ Purpose of alghorithm is to carry passengers in as few passes as possible. Lift 
 #### **MainWindow.xaml** and **MainWindow.xaml.cs**
 This two files are responsible for layout of main window. They define place of buttons and other structures. In **MainWindow.xaml.cs** is also including creator of building with floors and lifts.
 #### **SettingsWindow.xaml** and **SettingsWindow.xaml.cs**
-This files are responsible for service all data that user could change:
+This files are responsible for service all data which user could change:
 1. Number of floors
 2. Human weight
 3. Limit of the total weight of passengers in the lift
