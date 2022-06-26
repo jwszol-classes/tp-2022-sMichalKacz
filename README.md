@@ -13,21 +13,21 @@
 4. After those steps lift will start working. You could add new passengers with diifferent current and target floors in the whole time of program working.
 > If you change settings during program working current passengers and lifts positions will be completly cleared 
 
-###Libraries used in C# parts of project:
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Shapes;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Animation;
-using System.Windows.Threading;
-using System.Windows.Data;
-using System.Windows.Documents;
+### Libraries used in C# parts of project:
+* using System;
+* using System.Collections.Generic;
+* using System.Linq;
+* using System.Text;
+* using System.Threading.Tasks;
+* using System.Windows;
+* using System.Windows.Controls;
+* using System.Windows.Shapes;
+* using System.Windows.Media;
+* using System.Windows.Media.Imaging;
+* using System.Windows.Media.Animation;
+* using System.Windows.Threading;
+* using System.Windows.Data;
+* using System.Windows.Documents;
 
 
 
