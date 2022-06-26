@@ -15,10 +15,10 @@
 
 ### The content of key files
 #### cBuilding.cs
-1. class *cPassenger*- includes functions of animation the people on the floors like:
+##### 1. class **cPassenger**- includes functions of animation the people on the floors like:
 * walking to the lift and going out of the lift
 * hovering the cursor over passenger
-2. class *cBuilding*- it is the largest class in whole programm responsible for creating system of floors and lifts. In this class are located functions responsible for:
+2. class **cBuilding**- it is the largest class in whole programm responsible for creating system of floors and lifts. In this class are located functions responsible for:
 > number of lifts is in default setting equal to 1 but this could be quite easy changed to version with bigger number of lifts 
 * animations of opening and closing doors in the lift 
 * animations of lift vertical driving
@@ -28,8 +28,8 @@ Purpose of alghorithm is to carry passengers in as few passes as possible. Lift 
 2. *is anyone would like to go to the lift (it is true if only there is enough place in the lift and the directions of lift and passenger are the same)?*
 >here algorith also check case that if in lift is nobody and in the highest or lowest floor is passenger with diiferent direction, lift will stopped and direction of lift would change to direction of the passenger 
 3. *if at least one of anwsers for previous questions is positive lift will stopped on this floor. Else lift will push on.*
-3. class *cFloor* is only responsible for adding new passengers to the proper floor
-4. class *cLift* is responsible for storage data like:
+3. class **cFloor** is only responsible for adding new passengers to the proper floor
+4. class **cLift** is responsible for storage data like:
 * maximum lifting capacity
 * present number of people inside the lift
 * present level of the lift
