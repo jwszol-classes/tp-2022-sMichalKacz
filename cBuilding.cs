@@ -188,7 +188,7 @@ namespace LiftSimulator
             
             foreach (cPassenger p in lFloors[iNumberOfFloor].lPassengersOnTheFloor)
             {
-                if (p.bDirection == (lLifts[0].iCurrentDirection>0) || bNobodyWaitingAbove)
+                if (p.bDirection == (lLifts[0].iCurrentDirection>0) || (lLifts[0].lPassengersInTheLift.Count==0 && bNobodyWaitingAbove))
                 {
                     bIsAnyoneGoInTheLift = true;
                     break;
@@ -231,7 +231,7 @@ namespace LiftSimulator
             int iIndex = 0;
             foreach (cFloor f in lFloors)
             {
-                if ((iIndex > lLifts[0].iCurrentLevelOfTheLift) == (lLifts[0].iCurrentDirection > 0) && lLifts[0].iCurrentDirection != 0)
+                if ((iIndex > lLifts[0].iCurrentLevelOfTheLift) == (lLifts[0].iCurrentDirection > 0) && lLifts[0].iCurrentDirection != 0 && iIndex!= lLifts[0].iCurrentLevelOfTheLift)
                     foreach (cPassenger p in f.lPassengersOnTheFloor)
                     {
                         if (!p.bDirection == (lLifts[0].iCurrentDirection > 0))
