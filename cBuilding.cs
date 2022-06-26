@@ -146,7 +146,7 @@ namespace LiftSimulator
             else
             {
                 iTime++;
-                if(iTime==5)
+                if(iTime==5 && lLifts[0].iCurrentLevelOfTheLift != 0)
                 {
                     lLifts[0].iCurrentDirection = -lLifts[0].iCurrentLevelOfTheLift;
                     lLifts[0].imgLiftDirection.Source = new BitmapImage(new Uri("pack://application:,,,/Graphics/DirectionDown.png", UriKind.Absolute));
