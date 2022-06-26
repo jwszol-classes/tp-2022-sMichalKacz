@@ -11,12 +11,18 @@
 				*walking to the lift and going out of the lift
 				*hovering the cursor over passenger
 			-class cBuilding- it is the biggest class in whole programm responsible for creating system of floors and lifts.
-			> number of floors could be any natural number
-
+			> number of lifts is in default setting equal to 1 but this could be quite easy changed to version with bigger number of lifts
+			In this class are located functions responsible for:
+				*animations of opening and closing doors in the lift 
+				*animations of lift vertical driving
+				*calculating the direction and next floor which the elevator should go to.
+					Purpose of alghorithm is to carry passengers in as few passes as possible. Lift while moving in every floor and checks if:
+					1. anyone go out of the elevator?
+					2. is anyone would like to go to the lift (if only there is enough place in lift and the directions of lift and passengers are same)?
+					3.
 	
 ## Requirements
-
-	*Windows
+	*Windows 10 or newer
 	*development environment serving C#
 
 ## Compilation
@@ -31,3 +37,4 @@
 ## License
 
 ## Known bugs
+	*złe dane
