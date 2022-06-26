@@ -49,6 +49,3 @@ This files are responsible for service all data which user could change:
 ## Authors
 - [Kacper Kałużny](https://github.com/kacperkaluzny)
 - [Michał Kaczmarek](https://github.com/sMichalKacz)
-
-## Known bugs
-* if user in options enter wrong data (letters, numbers that are not natural numbers etc.) program would trash
