@@ -24,10 +24,10 @@
 * animations of lift vertical driving
 * calculating the direction and next floor which the elevator should go to.
 Purpose of alghorithm is to carry passengers in as few passes as possible. Lift everytime moves only one floor and check:
-2 1. is anyone go out of the elevator?
-2 2. is anyone would like to go to the lift (it is true if only there is enough place in the lift and the directions of lift and passenger are the same)?
+* is anyone go out of the elevator?
+* is anyone would like to go to the lift (it is true if only there is enough place in the lift and the directions of lift and passenger are the same)?
 >here algorith also check case that if in lift is nobody and in the highest or lowest floor is passenger with diiferent direction, lift will stopped and direction of lift would change to direction of the passenger 
-2 3. if at least one of anwsers for previous questions is positive lift will stopped on this floor. Else lift will push on.
+* if at least one of anwsers for previous questions is positive lift will stopped on this floor. Else lift will push on.
 3. class *cFloor* is only responsible for adding new passengers to the proper floor
 4. class *cLift* is responsible for storage data like:
 * maximum lifting capacity
