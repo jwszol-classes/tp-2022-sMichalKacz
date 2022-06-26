@@ -1,9 +1,9 @@
 # LiftSimulator
 
 ## Description
-	Project was made for pass a subject of Programming Techniques.
-	Project solves the problem of control system in apartment building.
-	Results of the project were improving team working and programming skills. 
+	-Project was made for pass a subject of Programming Techniques.
+	-Project solves the problem of control system in apartment building.
+	-Results of the project were improving team working and programming skills. 
 	
 	###The content of key files
 		####cBuilding.cs
@@ -43,4 +43,4 @@
 ## License
 
 ## Known bugs
-	*złe dane
+	-złe dane
