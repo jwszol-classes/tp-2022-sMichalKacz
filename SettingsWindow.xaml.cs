@@ -37,11 +37,39 @@ namespace LiftSimulator
             bool bClose = (bool)this.ShowDialog();
             if (bClose)
             {
-                S.iNumberOfFloors = Convert.ToInt32(tbSetNumberOfFloors.Text);
-                S.iNumberOfLifts = Convert.ToInt32(tbSetNumberOfLifts.Text);
-                S.iHumanWeight = Convert.ToInt32(tbSetHumanWeight.Text);
-                S.iLiftWeightLimit = Convert.ToInt32(tbSetLiftWeightLimit.Text);
+                int iNewNumberOfFloors=0;
+                int iNewNumberOfLifts=0;
+                int iNewHumanWeight=0;
+                int iNewLiftWeightLimit=0;
+
+                try {
+                iNewNumberOfFloors = Convert.ToInt32(tbSetNumberOfFloors.Text);       
+                iNewNumberOfLifts = Convert.ToInt32(tbSetNumberOfLifts.Text);
+                iNewHumanWeight = Convert.ToInt32(tbSetHumanWeight.Text);
+                iNewLiftWeightLimit = Convert.ToInt32(tbSetLiftWeightLimit.Text);
+                    }
+                catch(FormatException) {
+
+                    }
+
+                if (iNewNumberOfFloors>1)
+                {
+                S.iNumberOfFloors = iNewNumberOfFloors;      
+                }
+                if (iNewNumberOfLifts>0)
+                {
+                S.iNumberOfLifts = iNewNumberOfLifts;      
+                }
+                if (iNewHumanWeight>0)
+                {
+                S.iHumanWeight = iNewHumanWeight;      
+                }
+                if (iNewLiftWeightLimit>S.iHumanWeight)
+                {
+                S.iLiftWeightLimit = iNewLiftWeightLimit;      
+                }
                 return true;
+                
             }
             else
             {

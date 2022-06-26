@@ -180,9 +180,8 @@ namespace LiftSimulator
         {
             lLifts[0].bAnimationInProgress = false;
             int iNumberOfFloor = lLifts[0].iCurrentLevelOfTheLift;
-            //lLifts[0].vRemovePassengersFromTheLift(lFloors[iNumberOfFloor].lPassengersOnTheFloor, iNumberOfFloor);
             bool bIsAnyoneGoOutFromTheLift;
-            bIsAnyoneGoOutFromTheLift=lLifts[0].vCheckingThatIsAnyoneGoOutFromTheLift(lLifts[0].lPassengersInTheLift, iNumberOfFloor);//?
+            bIsAnyoneGoOutFromTheLift=lLifts[0].vCheckingThatIsAnyoneGoOutFromTheLift(lLifts[0].lPassengersInTheLift, iNumberOfFloor);
             bool bIsAnyoneGoInTheLift = false;
             bool bNobodyWaitingAbove = bCalculatePeopleOnOtherFloors();
             
