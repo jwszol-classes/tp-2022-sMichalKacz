@@ -10,8 +10,8 @@
 2. After that you should choose floor pressing small buttons with numbers of floors (they are on the left side near horizontal lines of floors)
 3. To choose passenger's target floor you should press bigger button with number on the left side. 
 > On every floor number with current level will not be available!
-4. After those steps lift will start working. You could add new passengers with diifferent current and target floors in the whole time of programm working.
-> If you change settings during programm working current passengers and lifts positions will be completly cleared 
+4. After those steps lift will start working. You could add new passengers with diifferent current and target floors in the whole time of program working.
+> If you change settings during program working current passengers and lifts positions will be completly cleared 
 
 ###Libraries used in C# parts of project:
 using System;
@@ -36,7 +36,7 @@ using System.Windows.Documents;
 1. class **cPassenger**- includes functions of animation the people on the floors such as:
 * walking into the lift and going out of it
 * hovering the cursor over passenger
-2. class **cBuilding**- it is the largest class in whole programm responsible for creating system of floors and lifts. In this class there are located functions responsible for:
+2. class **cBuilding**- it is the largest class in whole program responsible for creating system of floors and lifts. In this class there are located functions responsible for:
 > number of lifts is in default setting equal to 1 but this could be quite easly changed to version with higher number of lifts 
 * calculating the direction and next floor which the elevator should go to.
 Purpose of alghorithm is to carry passengers with as few passes as possible. Lift moves only one floor every time and checks:
