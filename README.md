@@ -1,4 +1,4 @@
-# LiftSimulator
+# Lift Simulator
 
 ## Description
 - Project was made in C# and Xaml.
